@@ -29,9 +29,11 @@ class ActorSAC(nn.Module):
     def __init__(self, state_dim, action_dim, mid_dim):
         super().__init__()
         self.net__s = nn.Sequential(nn.Linear(state_dim, mid_dim), nn.ReLU(),
-                                    nn.Linear(mid_dim, mid_dim), )  # network of state
-        self.net__a = nn.Linear(mid_dim, action_dim)  # network of action_average
-        self.net__d = nn.Linear(mid_dim, action_dim)  # network of action_log_std
+                                    nn.Linear(mid_dim, mid_dim), HardSwish(), )  # network of state
+        self.net__a = nn.Sequential(nn.Linear(mid_dim, mid_dim), HardSwish(),
+                                    nn.Linear(mid_dim, action_dim), HardSwish(), )  # network of action_average
+        self.net__d = nn.Sequential(nn.Linear(mid_dim, mid_dim), HardSwish(),
+                                    nn.Linear(mid_dim, action_dim), HardSwish(), )  # network of action_log_std
 
         self.sqrt_2pi_log = np.log(np.sqrt(2 * np.pi))  # constant
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -46,16 +48,29 @@ class ActorSAC(nn.Module):
         a_std_log = self.net__d(x).clamp(-16, 2)  # action_log_std
         return torch.normal(a_avg, a_std_log.exp()).tanh()
 
+    def get__a__log_prob0(self, s):
+        x = self.net__s(s)
+        a_avg = self.net__a(x)
+        a_std_log = self.net__d(x).clamp(-20, 2)
+        a_std = a_std_log.exp()
+
+        a = a_avg + a_std * torch.randn_like(a_avg, requires_grad=True, device=self.device)
+        a_tanh = a.tanh()
+
+        log_prob = ((a_avg - a) / a_std).pow(2) * 0.5 + a_std_log + self.sqrt_2pi_log
+        log_prob = (log_prob + (-a_tanh.pow(2) + 1.000001).log()).sum(1, keepdim=True)
+        return a_tanh, log_prob
+
     def get__a__log_prob(self, s):
         x = self.net__s(s)
         a_avg = self.net__a(x)
         a_std_log = self.net__d(x).clamp(-20, 2)
         a_std = a_std_log.exp()
 
-        a = a_avg + a_std * torch.randn_like(a_avg, requires_grad=True, device=self.device)  # todo ?
-        a_tanh = a.tanh()
+        noise = torch.randn_like(a_avg, requires_grad=True, device=self.device)
+        a_tanh = (a_avg + a_std * noise).tanh()
 
-        log_prob = ((a_avg - a) / a_std).pow(2) * 0.5 + a_std_log + self.sqrt_2pi_log
+        log_prob = noise.pow(2) * 0.5 + a_std_log + self.sqrt_2pi_log
         log_prob = (log_prob + (-a_tanh.pow(2) + 1.000001).log()).sum(1, keepdim=True)
         return a_tanh, log_prob
 
@@ -64,13 +79,24 @@ class CriticTwin(nn.Module):
     def __init__(self, state_dim, action_dim, mid_dim):
         super().__init__()
         self.net_sa = nn.Sequential(nn.Linear(state_dim + action_dim, mid_dim), nn.ReLU(),
-                                    nn.Linear(mid_dim, mid_dim), )
-        self.net_q1 = nn.Linear(mid_dim, 1)
-        self.net_q2 = nn.Linear(mid_dim, 1)
+                                    nn.Linear(mid_dim, mid_dim), HardSwish())  # concat(state, action)
+        self.net_q1 = nn.Sequential(nn.Linear(mid_dim, mid_dim), HardSwish(),
+                                    nn.Linear(mid_dim, 1), HardSwish(), )  # q1 value
+        self.net_q2 = nn.Sequential(nn.Linear(mid_dim, mid_dim), HardSwish(),
+                                    nn.Linear(mid_dim, 1), HardSwish(), )  # q2 value
 
     def forward(self, state, action):
         x = self.net_sa(torch.cat((state, action), dim=1))
         return self.net_q1(x), self.net_q2(x)
+
+
+class HardSwish(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.relu6 = nn.ReLU6()
+
+    def forward(self, x):
+        return self.relu6(x + 3.) / 6. * x
 
 
 """AgentZoo"""
@@ -380,6 +406,7 @@ def mp__update_params(args, eva_pipe, pipes):  # 2020-12-22
     total_step = 0
     if bool(rl_agent.__name__ in {'AgentPPO', 'AgentInterPPO'}):
         buffer = BufferArrayGPU(max_memo + max_step, state_dim, action_dim, if_ppo=True)
+        steps = 0
     else:
         buffer = BufferArrayGPU(max_memo, state_dim, action_dim=1 if if_discrete else action_dim, if_ppo=False)
 
@@ -393,8 +420,8 @@ def mp__update_params(args, eva_pipe, pipes):  # 2020-12-22
         if 'act_target' in dir(agent):
             agent.act_target.load_state_dict(agent.act.state_dict())
 
-        total_step += steps
-    eva_pipe.send(act_cpu)  # eva_pipe act
+    total_step += steps
+    eva_pipe.send((act_cpu, steps, agent.obj_a, agent.obj_c))  # eva_pipe act
 
     '''training loop'''
     if_train = True
@@ -459,13 +486,12 @@ def mp_evaluate_agent(args, eva_pipe):  # 2020-12-12
     target_reward = env.target_reward
 
     '''build evaluated only actor'''
-    act = eva_pipe.recv()  # eva_pipe act, act == act.to(device_cpu), requires_grad=False
-    obj_a, obj_c = 0., 0.
+    act, step_sum, obj_a, obj_c = eva_pipe.recv()  # eva_pipe act, act == act.to(device_cpu), requires_grad=False
 
     torch.set_num_threads(4)
     device = torch.device('cpu')
     recorder = Recorder(eval_size1, eval_size2)
-    recorder.update_recorder(env, act, max_step, device, if_discrete, obj_a, obj_c)
+    recorder.update_recorder(env, act, max_step, device, if_discrete, step_sum, obj_a, obj_c)
 
     if_train = True
     with torch.no_grad():  # for saving the GPU buffer
@@ -487,7 +513,7 @@ def mp_evaluate_agent(args, eva_pipe):  # 2020-12-12
                 act, steps, obj_a, obj_c = q_i_eva_get
                 step_sum += steps
             if step_sum > 0:
-                is_saved = recorder.update_recorder(env, act, step_sum, device, if_discrete, obj_a, obj_c)
+                is_saved = recorder.update_recorder(env, act, max_step, device, if_discrete, step_sum, obj_a, obj_c)
                 recorder.save_act(cwd, act, gpu_id) if is_saved else None
 
     recorder.save_npy__draw_plot(cwd)
@@ -545,7 +571,7 @@ class Recorder:
         print(f"{'ID':>2}  {'Step':>8}  {'MaxR':>8} |"
               f"{'avgR':>8}  {'stdR':>8}   {'objA':>8}  {'objC':>8}")
 
-    def update_recorder(self, env, act, max_step, device, if_discrete, obj_a, obj_c):
+    def update_recorder(self, env, act, max_step, device, if_discrete, step_sum, obj_a, obj_c):
         is_saved = False
         reward_list = [get_episode_return(env, act, max_step, device, if_discrete)
                        for _ in range(self.eva_size1)]
@@ -560,6 +586,7 @@ class Recorder:
                 is_saved = True
 
         r_std = float(np.std(reward_list))
+        self.total_step += step_sum
         self.recorder.append((self.total_step, r_avg, r_std, obj_a, obj_c))
         return is_saved
 
@@ -955,26 +982,27 @@ class FinanceMultiStockEnv:  # 2021-01-01
 
 
 def train__demo():
-    # env = FinanceMultiStockEnv()  # 2020-12-24
     import gym  # gym of OpenAI is not necessary for ElegantRL (even RL)
-    gym.logger.set_level(40)  # Block warning: 'WARN: Box bound precision lowered by casting to float32'
-    env = gym.make('LunarLanderContinuous-v2')
-    env = decorate_env(env, if_print=True)
+    args = Arguments(rl_agent=AgentModSAC)  # much slower than on-policy trajectory
+    # args.break_step = 2 ** 12  # todo just for test
+    # args.show_gap = 2 ** 1  # todo just for test
+    args.if_break_early = True
 
-    args = Arguments(rl_agent=AgentModSAC, env=env)  # much slower than on-policy trajectory
-    args.break_step = 2 ** 12  # todo just for test
-    args.show_gap = 2 ** 1  # todo just for test
-    args.eval_times1 = 1
-    args.eval_times2 = 2
-
-    # args.break_step = 2 ** 22  # UsedTime:
-    args.net_dim = 2 ** 7
-    args.max_memo = 2 ** 18
-    args.batch_size = 2 ** 8
+    args.env = decorate_env(gym.make('LunarLanderContinuous-v2'), if_print=True)
+    args.break_step = int(5e5 * 8)  # (2e4) 5e5, used time 1500s
+    args.reward_scale = 2 ** -3  # (-800) -200 ~ 200 (302)
     args.init_for_training()
     train_agent_mp(args)  # train_agent(args)
     exit()
 
+    args.env = decorate_env(gym.make('BipedalWalker-v3'), if_print=True)
+    args.break_step = int(2e5 * 8)  # (1e5) 2e5, used time 3500s
+    args.reward_scale = 2 ** -1  # (-200) -140 ~ 300 (341)
+    args.init_for_training()
+    train_agent_mp(args)  # train_agent(args)
+    exit()
+
+    env = FinanceMultiStockEnv()  # 2020-12-24
     from AgentZoo import AgentPPO
     args = Arguments(rl_agent=AgentPPO, env=env)
     args.eval_times1 = 1
