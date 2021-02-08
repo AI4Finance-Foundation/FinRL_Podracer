@@ -12,7 +12,7 @@
   
   
   
-# Deign Principles
+# Design Principles
 
   + **Be Pythonic** Quant traders, data scientists and machine learning engineers are familiar with the open source Python ecosystem: its programming model, and its tools, e.g., NumPy.
   
