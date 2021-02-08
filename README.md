@@ -4,7 +4,7 @@
   
   We aim to maintain an **elegant (lightweight, efficient and stable)** FinRL lib, which allows researchers and quant traders to develop algorithimc strategies easily.
   
-  + **Lightweight**: less than 1,000 code lines; using PyTorch, OpenAI Gym, and NumPy.
+  + **Lightweight**: The core codes have less than 800 code lines, using PyTorch, OpenAI Gym, and NumPy.
   
   + **Efficient**: Its performance is comparable with Ray RLlib.
   
