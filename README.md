@@ -18,7 +18,7 @@
   
   + **Put researchers and algorithmic traders first** Similar to PyThorch, we would like to support researchers to mannually control the execution of the codes, empowering them to improve the performance over automatical libraries.
   
-  + **Lean development of algorithimc strategies** It is better to have an elegant (may be slightly incomplete) solution thant a compressensive but complets and hard to follow design, e.g., RLlib.
+  + **Lean development of algorithimc strategies** It is better to have an elegant (may be slightly incomplete) solution thant a comprehensive but complex and hard to follow design, e.g., RLlib. It allows fast code iteration.
   
 # Code Structure
 
