@@ -4,11 +4,11 @@
   
   We aim to maintain a lightweight, efficient and stable DRL lib.
   
-  **Lightweight** less than 1,000 code lines; using PyTorch, OpenAI Gym, and NumPy.
+  + **Lightweight** less than 1,000 code lines; using PyTorch, OpenAI Gym, and NumPy.
   
-  **Efficient** We expect its performance to be comparable with Ray RLlib.
+  + **Efficient** We expect its performance to be comparable with Ray RLlib.
   
-  **Stable** We expect it is stable as Stable Baseline 3.
+  + **Stable** We expect it is stable as Stable Baseline 3.
   
   
   
