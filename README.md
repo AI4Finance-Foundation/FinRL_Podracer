@@ -14,11 +14,11 @@
   
 # Design Principles
 
-  + **Be Pythonic** Quant traders, data scientists and machine learning engineers are familiar with the open source Python ecosystem: its programming model, and its tools, e.g., NumPy.
+  + **Be Pythonic**: Quant traders, data scientists and machine learning engineers are familiar with the open source Python ecosystem: its programming model, and its tools, e.g., NumPy.
   
-  + **Put researchers and algorithmic traders first** Similar to PyThorch, we would like to support researchers to mannually control the execution of the codes, empowering them to improve the performance over automatical libraries.
+  + **Put researchers and algorithmic traders first**: Similar to PyThorch, we would like to support researchers to mannually control the execution of the codes, empowering them to improve the performance over automatical libraries.
   
-  + **Lean development of algorithimc strategies** It is better to have an elegant (may be slightly incomplete) solution than a comprehensive but complex and hard to follow design, e.g., RLlib. It allows fast code iteration.
+  + **Lean development of algorithimc strategies**: It is better to have an elegant (may be slightly incomplete) solution than a comprehensive but complex and hard to follow design, e.g., RLlib. It allows fast code iteration.
   
 # Code Structure
 
