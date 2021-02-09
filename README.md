@@ -10,7 +10,7 @@
   
   + **Efficient**: Its performance is comparable with Ray RLlib [link](https://github.com/ray-project/ray).
   
-  + **Stable**: It is stable as Stable Baseline 3 [link](https://github.com/DLR-RM/stable-baselines3).
+  + **Stable**: It is as stable as Stable Baseline 3 [link](https://github.com/DLR-RM/stable-baselines3).
   
 
 # Design Principles
