@@ -1,5 +1,7 @@
 # Elegant FinRL
 
+  This project is a solution for **FinRL 2.0**: intermediate-level framework for full-stack developers and professionals. 
+  
   This project borrows ideas from [ElegantRL](https://github.com/Yonv1943/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
   We maintain an **elegant (lightweight, efficient and stable)** FinRL lib, allowing researchers and quant traders to develop algorithimc strategies easily.
