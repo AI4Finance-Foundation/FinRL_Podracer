@@ -26,5 +26,7 @@
   
   + **DQN --> DoubleDQN, DuelingDQN, D3QN, GAE**
   
+  Please check out OpenAI Spinning Up [DRL Algorithms](https://spinningup.openai.com/en/latest/index.html)
+  
 # Code Structure
 
