@@ -17,7 +17,7 @@
 
   + **Be Pythonic**: Quant traders, data scientists and machine learning engineers are familiar with the open source Python ecosystem: its programming model, and its tools, e.g., NumPy.
   
-  + **Put researchers and algorithmic traders first**: Based on PyThorch, we support researchers to mannually control the execution of the codes, empowering them to improve the performance over automatical libraries.
+  + **Put researchers and algorithmic traders first**: Based on PyTorch, we support researchers to mannually control the execution of the codes, empowering them to improve the performance over automatical libraries.
   
   + **Lean development of algorithimc strategies**: It is better to have an elegant (may be slightly incomplete) solution than a comprehensive but complex and hard to follow design, e.g., Ray RLlib [link](https://github.com/ray-project/ray). It allows fast code iteration.
   
