@@ -24,7 +24,7 @@
   
 # DRL Algorithms
 
-  + **DDPG --> SAC, A2C, PPO(GAE), TD3, InterAC, InterSAC**:
+  + **DDPG --> SAC, A2C, PPO(GAE), TD3;  InterAC, InterSAC**:
   
   + **DQN --> DoubleDQN, DuelingDQN, D3QN, GAE**
   
