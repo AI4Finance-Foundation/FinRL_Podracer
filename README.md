@@ -20,5 +20,12 @@
   
   + **Lean development of algorithimc strategies**: It is better to have an elegant (may be slightly incomplete) solution than a comprehensive but complex and hard to follow design, e.g., RLlib. It allows fast code iteration.
   
+  
+# DRL Algorithms
+
+  + **DDPG --> SAC, A2C, PPO(GAE), TD3, InterAC, InterSAC**:
+  
+  + **DQN --> DoubleDQN, DuelingDQN, D3QN, GAE**
+  
 # Code Structure
 
