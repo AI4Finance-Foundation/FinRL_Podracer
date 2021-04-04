@@ -1,6 +1,6 @@
 # Elegant FinRL
 
-  This project is a solution for **FinRL 2.0**: intermediate-level framework for full-stack developers and professionals. 
+  This project is a solution for [**FinRL 2.0**](https://github.com/AI4Finance-LLC/FinRL-Library): intermediate-level framework for full-stack developers and professionals. 
   
   This project borrows ideas from [ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
