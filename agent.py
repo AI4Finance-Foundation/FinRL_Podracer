@@ -4,10 +4,10 @@ from copy import deepcopy  # deepcopy target_network
 import torch
 import numpy as np
 import numpy.random as rd
-from elegantrl.net import QNet, QNetDuel, QNetTwin, QNetTwinDuel
-from elegantrl.net import Actor, ActorSAC, ActorPPO
-from elegantrl.net import Critic, CriticAdv, CriticTwin
-from elegantrl.net import InterDPG, InterSPG, InterPPO
+from net import QNet, QNetDuel, QNetTwin, QNetTwinDuel
+from net import Actor, ActorSAC, ActorPPO
+from net import Critic, CriticAdv, CriticTwin
+from net import InterDPG, InterSPG, InterPPO
 
 
 class AgentBase:
