@@ -6,8 +6,7 @@ import numpy as np
 import numpy.random as rd
 
 from copy import deepcopy
-from elegantrl.agent import ReplayBuffer, ReplayBufferMP
-from elegantrl.env import PreprocessEnv
+from agent import ReplayBuffer, ReplayBufferMP
 
 gym.logger.set_level(40)  # Block warning: 'WARN: Box bound precision lowered by casting to float32'
 
@@ -96,14 +95,14 @@ class Arguments:
 
 
 def fin_rl_stock_trading():
-    from elegantrl.agent import AgentPPO
+    from agent import AgentPPO
 
     '''choose an DRL algorithm'''
     args = Arguments(if_on_policy=True)
     args.agent = AgentPPO()
     args.agent.if_use_gae = False
 
-    from elegantrl.env import FinanceStockEnv  # a standard env for ElegantRL, not need PreprocessEnv()
+    from env import FinanceStockEnv  # a standard env for ElegantRL, not need PreprocessEnv()
     args.env = FinanceStockEnv(if_train=True, train_beg=0, train_len=1024)
     args.env_eval = FinanceStockEnv(if_train=False, train_beg=0, train_len=1024)  # eva_len = 1699 - train_len
     args.reward_scale = 2 ** 0  # RewardRange: 0 < 1.0 < 1.25 <
