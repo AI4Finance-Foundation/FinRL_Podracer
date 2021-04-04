@@ -47,7 +47,7 @@
 
   + `AgentRun.py`
     + `train_agent()` sets up hyper-parameters, creates environment, chooses algorithms, and uses the alogrithm to start training.
-    + Set up hyper-parameters: `Arguments` provides the default values and corresponding explanations.    
+    + Set hyper-parameters: `Arguments` provides the default values and corresponding explanations.    
     + Create environment: `FinanceMultiStockEnv` is a gym-styled standard training environment，and it could be considered as a template.    
     + Choose algorithms: `from AgentZoo import AgentXXX` All available algorithms are inside `AgentZoo.py`.
 
