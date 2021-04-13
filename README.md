@@ -73,7 +73,7 @@ Formally, we model stock trading as a Markov Decision Process (MDP), and formula
 <br/>
 <a href="https://github.com/AI4Finance-LLC/Elegant-FinRL" target="\_blank">
 	<div align="center">
-		<img src="figs/2.jpg" width="40%"/>
+		<img src="figs/2.png" width="40%"/>
 	</div>
 <!-- 	<div align="center"><caption>Slack Invitation Link</caption></div> -->
 </a>
