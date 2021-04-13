@@ -54,7 +54,14 @@ For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up
 
 # Stock Trading Problem Formulation
 
-![Overview](https://github.com/AI4Finance-LLC/Elegant-FinRL/blob/main/figs/1.png)
+<br/>
+<a href="https://github.com/AI4Finance-LLC/Elegant-FinRL" target="\_blank">
+	<div align="center">
+		<img src="figs/1.jpg" width="40%"/>
+	</div>
+<!-- 	<div align="center"><caption>Slack Invitation Link</caption></div> -->
+</a>
+<br/>
 
 Formally, we model stock trading as a Markov Decision Process (MDP), and formulate the trading objective as maximization of expected return:
 + **State s = [b, p, h]**: a vector that includes the remaining balance b, stock prices p, and stock shares h. p and h are vectors with D dimension, where D denotes the number of stocks.
@@ -63,6 +70,12 @@ Formally, we model stock trading as a Markov Decision Process (MDP), and formula
 + **Policy π(s)**: The trading strategy at state s, which is a probability distribution of actions at state s.
 + **Q-function Q(s, a)**: the expected return (reward) of taking action a at state s following policy π.
 + **State-transition**: After taking the actions a, the number of shares h is modified, as shown in Fig 3, and the new portfolio is the summation of the balance and the total value of the stocks.
-
-![state-transition](https://github.com/AI4Finance-LLC/Elegant-FinRL/blob/main/figs/2.png)
+<br/>
+<a href="https://github.com/AI4Finance-LLC/Elegant-FinRL" target="\_blank">
+	<div align="center">
+		<img src="figs/2.jpg" width="40%"/>
+	</div>
+<!-- 	<div align="center"><caption>Slack Invitation Link</caption></div> -->
+</a>
+<br/>
 
