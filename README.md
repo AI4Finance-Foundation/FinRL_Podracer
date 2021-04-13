@@ -24,11 +24,11 @@
   
 # DRL Algorithms
 
-  + **DDPG --> TD3, SAC, A2C, PPO(GAE)**:
-  
-  + **DQN --> DoubleDQN, DuelingDQN, D3QN**
-  
-  Please check out OpenAI Spinning Up [DRL Algorithms](https://spinningup.openai.com/en/latest/index.html)
+Currently, model-free deep reinforcement learning (DRL) algorithms: 
++ **DDPG, TD3, SAC, A2C, PPO, PPO(GAE)** for continuous actions
++ **DQN, DoubleDQN, D3QN** for discrete actions
+
+For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/). 
 
 
 # Training pipeline
