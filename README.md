@@ -81,3 +81,23 @@ Formally, we model stock trading as a Markov Decision Process (MDP), and formula
 <!-- 	<div align="center"><caption>Slack Invitation Link</caption></div> -->
 </a>
 
+# Stock Trading Environment
+
+### Environment Design
+The environment is designed in the OpenAI gym-style since it is considered as the standard implementation of reinforcement learning environments.
++ **Initialization**: the stock data from Yahoo Finance is pre-processed, and the variables related to the stock trading problem are initialized. Before the training, an initialization function is used to create a new environment for interacting with the agent.
++ **Reset**: the state and variables of the environment are reset to the initial condition. This function is used once the simulation stops and needs to restart.
++ **Step**: the state takes an action from the agent and then returns a list of three things — the next state, the reward, the indication of whether the current episode is done or not. The way the environment computes the next state and the reward is based on the state-action transition defined in the previous blog. The step function is used when the agent collects the transitions for training usage.
+
+### State Space and Action Space
++ **State Space**: We use a 181-dimensional vector consists of seven parts of information to represent the state space of multiple stocks trading environment: [b, p, h, M, R, C, X], where b is the balance, p is the stock prices, h is the number of shares, M is the Moving Average Convergence Divergence (MACD), R is the Relative Strength Index (RSI), C is the Commodity Channel Index (CCI), and X is the Average Directional Index (ADX).
++ **Action Space**:  As a recap, we have three types of actions: selling, buying, and holding for a single stock. We use the negative value for selling, positive value for buying, and zero for holding. In this case, the action space is defined as {-k, …, -1, 0, 1, …, k}, where k is the maximum share to buy or sell in each transaction.
+
+### Easy-to-customize Features
++ Initial_capital: the initial capital that the user wants to invest.
++ Tickers: the stocks that the user wants to trade with.
++ Initial_stocks: the initial amount of each stock and the default could be zero.
++ Transaction_fee_percent: the transaction fee of each transaction.
++ Max_stock: the user is able to define the maximum number of stocks that are allowed to trade per transaction.
++ Train_beg, train_len: the training and backtesting time interval. Once the training period is defined, the rest is for backtesting.
+
