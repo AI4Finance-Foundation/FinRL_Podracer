@@ -41,6 +41,11 @@ For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up
    + Critic Network, 
 + **agent.py**  # RL algorithms. 
    + AgentBase 
+   + AgentDQN
+   + AgentDDPG
+   + AgentTD3
+   + AgentSAC
+   + AgentPPO
 + **env.py** # Stock Trading environment
 + **run.py**    # Stock Trading application
    + Parameter initialization,
