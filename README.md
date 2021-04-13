@@ -31,6 +31,12 @@ Currently, model-free deep reinforcement learning (DRL) algorithms:
 For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/). 
 
 # File Structure
+<a href="https://github.com/AI4Finance-LLC/Elegant-FinRL" target="\_blank">
+	<div align="center">
+		<img src="https://github.com/Yonv1943/ElegantRL/blob/master/figs/File_structure.png" width="100%"/>
+	</div>
+<!-- 	<div align="center"><caption>Slack Invitation Link</caption></div> -->
+</a>
  ![File_structure](https://github.com/Yonv1943/ElegantRL/blob/master/figs/File_structure.png)
 
    An agent in **agent.py** uses networks in **net.py** and is trained in **run.py** by interacting with an environment in **env.py**.
