@@ -94,10 +94,10 @@ The environment is designed in the OpenAI gym-style since it is considered as th
 + **Action Space**:  As a recap, we have three types of actions: selling, buying, and holding for a single stock. We use the negative value for selling, positive value for buying, and zero for holding. In this case, the action space is defined as {-k, …, -1, 0, 1, …, k}, where k is the maximum share to buy or sell in each transaction.
 
 ### Easy-to-customize Features
-+ Initial_capital: the initial capital that the user wants to invest.
-+ Tickers: the stocks that the user wants to trade with.
-+ Initial_stocks: the initial amount of each stock and the default could be zero.
-+ Transaction_fee_percent: the transaction fee of each transaction.
-+ Max_stock: the user is able to define the maximum number of stocks that are allowed to trade per transaction.
-+ Train_beg, train_len: the training and backtesting time interval. Once the training period is defined, the rest is for backtesting.
++ **Initial_capital**: the initial capital that the user wants to invest.
++ **Tickers**: the stocks that the user wants to trade with.
++ **Initial_stocks**: the initial amount of each stock and the default could be zero.
++ **Transaction_fee_percent**: the transaction fee of each transaction.
++ **Max_stock**: the user is able to define the maximum number of stocks that are allowed to trade per transaction.
++ **Train_beg, train_len**: the training and backtesting time interval. Once the training period is defined, the rest is for backtesting.
 
