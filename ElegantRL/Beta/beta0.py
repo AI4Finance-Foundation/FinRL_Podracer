@@ -3,14 +3,14 @@ import numpy as np
 from elegantrl.demo import *
 
 """
-FinRL PPO
-beta1 beta2 gamma reward
-beta2 "reward_scaling": 1e-6
-beta3 beta2 repeat_times = 2 ** 3
+ModSAC
+ceta4 Ant act_target q_value_pg = torch.min(*self.cri.get_q1_q2
+ceta3 0.99 * self.obj_c + 0.005 
+ceta2 HumanoidBulletEnv if_use_dn = False
 
-Ant ModSAC Alpha reliable_lambda
-ceta2 if if_update_a
-ceta3 ceta2 repeat_times = 2 ** 0
+PPO
+ceta1 HumanoidBulletEnv
+ceta0 HumanoidBulletEnv max_memo = args.env.max_step * 8
 """
 
 
@@ -82,7 +82,7 @@ def check_finrl():
     timer = time()
     while not done:
         action = rd.rand(action_dim) * 2 - 1
-        next_state, reward, done, _ = env.step(action)
+        next_state, reward, done, _ = env.day(action)
         print(';', step, len(next_state), env.day, reward)
         step += 1
 
