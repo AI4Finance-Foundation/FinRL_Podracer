@@ -4,9 +4,11 @@ from elegantrl.demo import *
 
 """
 ModSAC
-ceta4 Ant act_target q_value_pg = torch.min(*self.cri.get_q1_q2
-ceta3 0.99 * self.obj_c + 0.005 
-ceta2 HumanoidBulletEnv if_use_dn = False
+ceta1 Ant 0.993 * self.obj_c if_use_dn = False
+ceta3 Ant 0.993 * self.obj_c if_use_dn = True
+ceta2 HumanoidBulletEnv 0.993 * self.obj_c if_use_dn = False
+ceta4 HumanoidBulletEnv 0.993 * self.obj_c if_use_dn = True
+beta0 HumanoidBulletEnv 0.993 * self.obj_c if_use_dn = False args.env.max_step * 4
 
 PPO
 ceta1 HumanoidBulletEnv
@@ -16,26 +18,43 @@ ceta0 HumanoidBulletEnv max_memo = args.env.max_step * 8
 
 def demo4_bullet_mujoco_off_policy():
     args = Arguments(if_on_policy=False)
-    args.random_seed = 100867
+    args.random_seed = 1008601
 
     from elegantrl.agent import AgentModSAC  # AgentSAC, AgentTD3, AgentDDPG
     args.agent = AgentModSAC()  # AgentSAC(), AgentTD3(), AgentDDPG()
-    args.agent.if_use_dn = True
-    args.net_dim = 2 ** 7
+    args.agent.if_use_dn = False  # todo
 
     import pybullet_envs  # for python-bullet-gym
     dir(pybullet_envs)
 
-    "TotalStep:  3e5, TargetReward: 1500, UsedTime:  8ks, AntBulletEnv-v0"
-    "TotalStep:  6e5, TargetReward: 2500, UsedTime: 18ks, AntBulletEnv-v0"
-    "TotalStep: 10e5, TargetReward: 2800, UsedTime:   ks, AntBulletEnv-v0"
-    args.env = PreprocessEnv(env=gym.make('AntBulletEnv-v0'))
+    # "TotalStep:  5e4, TargetReturn: 18, UsedTime: 1100s, ReacherBulletEnv-v0"
+    # "TotalStep: 30e4, TargetReturn: 25, UsedTime:     s, ReacherBulletEnv-v0"
+    # args.env = PreprocessEnv(gym.make('ReacherBulletEnv-v0'))
+    # args.env.max_step = 2 ** 10  # important, default env.max_step=150
+    # args.reward_scale = 2 ** 0  # -80 < -30 < 18 < 28
+    # args.gamma = 0.96
+    # args.break_step = int(6e4 * 8)  # (4e4) 8e5, UsedTime: (300s) 700s
+    # args.eval_times1 = 2 ** 2
+    # args.eval_times1 = 2 ** 5
+    # args.if_per = True
+    #
+    # train_and_evaluate(args)
+
+    "TotalStep:  3e5, TargetReward: 1500, UsedTime:  4ks, AntBulletEnv-v0 ModSAC if_use_dn"
+    "TotalStep:  4e5, TargetReward: 2500, UsedTime:  6ks, AntBulletEnv-v0 ModSAC if_use_dn"
+    "TotalStep: 15e5, TargetReward: 3198, UsedTime:   ks, AntBulletEnv-v0 ModSAC if_use_dn"
+    "TotalStep:  3e5, TargetReward: 1500, UsedTime:  8ks, AntBulletEnv-v0 ModSAC if_use_cn"
+    "TotalStep:  7e5, TargetReward: 2500, UsedTime: 18ks, AntBulletEnv-v0 ModSAC if_use_cn"
+    "TotalStep: 16e5, TargetReward: 2923, UsedTime:   ks, AntBulletEnv-v0 ModSAC if_use_cn"
+    args.env = PreprocessEnv(env=gym.make('HumanoidBulletEnv-v0'))  # todo
     args.break_step = int(6e5 * 8)  # (5e5) 1e6, UsedTime: (15,000s) 30,000s
     args.if_allow_break = False
-    args.reward_scale = 2 ** -2  # todo # RewardRange: -50 < 0 < 2500 < 3340
-    args.max_memo = 2 ** 18
+    args.reward_scale = 2 ** -3
+    args.max_memo = 2 ** 20
     args.batch_size = 2 ** 9
-    args.show_gap = 2 ** 8  # for Recorder
+    args.target_step = args.env.max_step * 4  # todo
+    args.repeat_times = 2 ** 1  # todo
+    args.eval_gap = 2 ** 9  # for Recorder
     args.eva_size1 = 2 ** 1  # for Recorder
     args.eva_size2 = 2 ** 3  # for Recorder
 
@@ -44,51 +63,5 @@ def demo4_bullet_mujoco_off_policy():
     train_and_evaluate_mp(args)
 
 
-def check_finrl():
-    from FinRL import StockTradingEnv
-    from numpy import random as rd
-    from finrl.config import config
-    from finrl.preprocessing.data import data_split
-    import pandas as pd
-
-    # df = pd.read_pickle('finrl_data.df')  # DataFrame of Pandas
-    #
-    # from finrl.preprocessing.preprocessors import FeatureEngineer
-    # fe = FeatureEngineer(
-    #     use_technical_indicator=True,
-    #     tech_indicator_list=config.TECHNICAL_INDICATORS_LIST,
-    #     use_turbulence=True,
-    #     user_defined_feature=False,
-    # )
-    #
-    # processed_df = fe.preprocess_data(df)
-    # processed_df.to_pickle('finrl_processed_data.df')  # DataFrame of Pandas
-    processed_data_path = 'StockTradingEnv_processed_data.df'
-    processed_df = pd.read_pickle(processed_data_path)  # DataFrame of Pandas
-    print(processed_df.columns.values)
-
-    split_df = data_split(processed_df, start='2008-03-19', end='2021-01-01')
-    # `start`
-
-    env = StockTradingEnv(df=split_df, tech_indicator_list=config.TECHNICAL_INDICATORS_LIST)
-    action_dim = env.action_dim
-
-    state = env.reset()
-    print('state_dim', len(state))
-
-    done = False
-    step = 1
-    from time import time
-    timer = time()
-    while not done:
-        action = rd.rand(action_dim) * 2 - 1
-        next_state, reward, done, _ = env.day(action)
-        print(';', step, len(next_state), env.day, reward)
-        step += 1
-
-    print(';;', step, int(time() - timer))  # 44 seconds
-
-
 if __name__ == '__main__':
-    # demo2_continuous_action_space_off_policy()
-    check_finrl()
+    demo4_bullet_mujoco_off_policy()

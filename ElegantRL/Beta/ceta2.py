@@ -3,7 +3,7 @@ from elegantrl.run import *
 
 def demo4_bullet_mujoco_off_policy():
     args = Arguments(if_on_policy=False)
-    args.random_seed = 100860
+    args.random_seed = 1008601
 
     from elegantrl.agent import AgentModSAC  # AgentSAC, AgentTD3, AgentDDPG
     args.agent = AgentModSAC()  # AgentSAC(), AgentTD3(), AgentDDPG()
@@ -34,12 +34,11 @@ def demo4_bullet_mujoco_off_policy():
     args.env = PreprocessEnv(env=gym.make('HumanoidBulletEnv-v0'))  # todo
     args.break_step = int(6e5 * 8)  # (5e5) 1e6, UsedTime: (15,000s) 30,000s
     args.if_allow_break = False
-    args.reward_scale = 2 ** -2
+    args.reward_scale = 2 ** -3
     args.max_memo = 2 ** 20
     args.batch_size = 2 ** 9
-    args.target_step = args.env.max_step
-    args.repeat_times = 2 ** 1  # todo
-    args.gamma = 0.995  # todo
+    args.target_step = args.env.max_step * 2
+    args.repeat_times = 2 ** 0  # todo
     args.eval_gap = 2 ** 9  # for Recorder
     args.eva_size1 = 2 ** 1  # for Recorder
     args.eva_size2 = 2 ** 3  # for Recorder

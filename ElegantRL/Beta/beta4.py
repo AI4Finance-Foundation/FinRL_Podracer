@@ -3,7 +3,7 @@ import numpy as np
 import numpy.random as rd
 
 
-class StockTradingEnv:
+class StockTradingEnv2021_0414:
     def __init__(self, max_stock=1e2, initial_amount=1e6, buy_cost_pct=1e-3, sell_cost_pct=1e-3,
                  if_train=True):
         # load data
@@ -91,7 +91,7 @@ class StockTradingEnv:
                           *(tech_ary * 2 ** -8),), dtype=np.float32)
 
         total_asset = (price_ary * self.stocks).sum() + self.amount
-        reward = (total_asset - self.total_asset) * 2 ** -16
+        reward = (total_asset - self.total_asset) * 2 ** -14  # todo
         self.total_asset = total_asset
 
         self.rewards += reward

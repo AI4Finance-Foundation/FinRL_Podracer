@@ -16,20 +16,27 @@ def demo3_custom_env_fin_rl():
     # from elegantrl.env import FinanceStockEnv  # a standard env for ElegantRL, not need PreprocessEnv()
     # args.env = FinanceStockEnv(if_train=True, train_beg=0, train_len=1024)
     # args.env_eval = FinanceStockEnv(if_train=False, train_beg=0, train_len=1024)  # eva_len = 1699 - train_len
-    from FinRL import StockTradingEnv
     from finrl.config import config
-    env_kwargs = {
-        "max_stock": 100,
-        "initial_amount": 1000000,
-        "buy_cost_pct": 0.001,
-        "sell_cost_pct": 0.001,
-        # "state_space": 1 + (2 + len(config.TECHNICAL_INDICATORS_LIST)) * stock_dimension,
-        "stock_dim": len(config.DOW_30_TICKER),
-        "tech_indicator_list": config.TECHNICAL_INDICATORS_LIST,
-        # "action_space": stock_dimension,
-        "reward_scaling": 1e-4
-    }
-    args.env = StockTradingEnv(**env_kwargs)
+    from beta3 import StockTradingEnv, load_stock_trading_data
+    train_df, eval_df = load_stock_trading_data()
+    # train = data_split(processed_df, config.START_DATE, config.START_TRADE_DATE)
+    # trade = data_split(processed_df, config.START_TRADE_DATE, config.END_DATE)
+
+    # calculate state action space
+    stock_dimension = len(train_df.tic.unique())
+    state_space = 1 + (2 + len(config.TECHNICAL_INDICATORS_LIST)) * stock_dimension
+
+    env_kwargs = {"max_stock": 100,
+                  "initial_amount": 1000000,
+                  "buy_cost_pct": 0.001,
+                  "sell_cost_pct": 0.001,
+                  "state_space": state_space,
+                  "stock_dim": stock_dimension,
+                  "tech_indicator_list": config.TECHNICAL_INDICATORS_LIST,
+                  "action_space": stock_dimension,
+                  "reward_scaling": 2 ** -14}
+    args.env = StockTradingEnv(df=train_df, **env_kwargs)
+    args.env_eval = StockTradingEnv(df=eval_df, **env_kwargs)
 
     args.reward_scale = 2 ** 0  # RewardRange: 0 < 1.0 < 1.25 < 1.5 < 1.6
     args.break_step = int(5e6)
