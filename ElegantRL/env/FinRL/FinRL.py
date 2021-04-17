@@ -2,18 +2,19 @@ import os
 import pandas as pd
 import numpy as np
 import numpy.random as rd
-from stockstats import StockDataFrame as Sdf  # for Sdf.retype
+import torch
 
 
 class StockTradingEnv:
-    def __init__(self, max_stock=1e2, initial_amount=1e6, buy_cost_pct=1e-3, sell_cost_pct=1e-3,
+    def __init__(self, max_stock=1e2, initial_amount=1e6, buy_cost_pct=1e-3, sell_cost_pct=1e-3, gamma=0.99,
+                 start_date='2008-03-19', start_eval_date='2016-01-01', env_eval_date='2021-01-01',
                  tech_indicator_list=None, initial_stocks=None, if_eval=False):
-        train_df, eval_df = self.load_stock_trading_data()
+        train_df, eval_df = self.load_stock_trading_data(start_date, start_eval_date, env_eval_date)
         df = eval_df if if_eval else train_df
         self.price_ary, self.tech_ary = self.convert_df_to_ary(df, tech_indicator_list)
         stock_dim = self.price_ary.shape[1]
 
-        self.gamma = 0.99
+        self.gamma = gamma
         self.max_stock = max_stock
         self.buy_cost_pct = buy_cost_pct
         self.sell_cost_pct = sell_cost_pct
@@ -32,23 +33,23 @@ class StockTradingEnv:
         self.env_name = 'StockTradingEnv-v1'
         self.state_dim = 1 + 2 * stock_dim + self.tech_ary.shape[1]
         self.action_dim = stock_dim
-        self.max_step = len(self.price_ary)
+        self.max_step = len(self.price_ary) - 1
         self.if_discrete = False
-        self.target_return = 2.5
-        self.episode_return = 0
+        self.target_return = 3.5  # 4.3
+        self.episode_return = 0.0
 
     def reset(self):
-        self.amount = self.initial_amount * rd.uniform(0.95, 1.05)
-        self.stocks = self.initial_stocks + rd.randint(0, 10, size=self.initial_stocks.shape)
-
         self.day = 0
         price = self.price_ary[self.day]
 
-        self.gamma_reward = 0.0
+        self.stocks = self.initial_stocks + rd.randint(0, 64, size=self.initial_stocks.shape)
+        self.amount = self.initial_amount * rd.uniform(0.95, 1.05) - (self.stocks * price).sum()
+
         self.total_asset = self.amount + (self.stocks * price).sum()
         self.initial_total_asset = self.total_asset
+        self.gamma_reward = 0.0
 
-        state = np.hstack((self.amount * 2 ** -12,
+        state = np.hstack((self.amount * 2 ** -13,
                            price,
                            self.stocks,
                            self.tech_ary[self.day],)
@@ -62,20 +63,16 @@ class StockTradingEnv:
         price = self.price_ary[self.day]
 
         for index in np.where(actions < 0)[0]:  # sell_index:
-            if price[index] > 0 and self.stocks[index] > 0:  # Sell only if current asset is > 0
-                sell_num_shares = min(abs(actions[index]), self.stocks[index])
+            if price[index] > 0:  # Sell only if current asset is > 0
+                sell_num_shares = min(self.stocks[index], -actions[index])
                 self.stocks[index] -= sell_num_shares
-
-                sell_amount = price[index] * sell_num_shares * (1 - self.sell_cost_pct)
-                self.amount += sell_amount
+                self.amount += price[index] * sell_num_shares * (1 - self.sell_cost_pct)
 
         for index in np.where(actions > 0)[0]:  # buy_index:
             if price[index] > 0:  # Buy only if the price is > 0 (no missing data in this particular date)
                 buy_num_shares = min(self.amount // price[index], actions[index])
                 self.stocks[index] += buy_num_shares
-
-                buy_amount = price[index] * buy_num_shares * (1 + self.buy_cost_pct)
-                self.amount -= buy_amount
+                self.amount -= price[index] * buy_num_shares * (1 + self.buy_cost_pct)
 
         state = np.hstack((self.amount * 2 ** -13,
                            price,
@@ -84,26 +81,48 @@ class StockTradingEnv:
                           ).astype(np.float32) * 2 ** -5
 
         total_asset = self.amount + (self.stocks * price).sum()
-        reward = (total_asset - self.total_asset) * 2 ** -15
+        reward = (total_asset - self.total_asset) * 2 ** -14  # reward scaling
         self.total_asset = total_asset
 
         self.gamma_reward = self.gamma_reward * self.gamma + reward
-        done = self.day == self.max_step - 1
+        done = self.day == self.max_step
         if done:
             reward = self.gamma_reward
             self.episode_return = total_asset / self.initial_total_asset
+            # print(';',reward, self.episode_return)
         return state, reward, done, dict()
 
     @staticmethod
-    def load_stock_trading_data():
+    def load_stock_trading_data(start_date='2008-03-19', start_eval_date='2016-01-01', env_eval_date='2021-01-01'):
         cwd = './env/FinRL'
+
+        # processed_data_path = f'{cwd}/dow_30_daily_2000_2021.csv'
+        # if os.path.exists(processed_data_path):
+        #     processed_df = pd.read_csv(processed_data_path)
+        #     train_df = data_split(processed_df, '2000-01-11', '2014-01-01')  # 3515/5278
+        #     eval_df = data_split(processed_df, '2014-01-01', '2021-01-01')  # 1763/5278
+        #     return train_df, eval_df
+
         raw_data_path = f'{cwd}/StockTradingEnv_raw_data.df'
         processed_data_path = f'{cwd}/StockTradingEnv_processed_data.df'
+        # ticker_list = [
+        #     'AAPL', 'MSFT', 'JPM', 'V', 'RTX', 'PG', 'GS', 'NKE', 'DIS', 'AXP', 'HD',
+        #     'INTC', 'WMT', 'IBM', 'MRK', 'UNH', 'KO', 'CAT', 'TRV', 'JNJ', 'CVX', 'MCD',
+        #     'VZ', 'CSCO', 'XOM', 'BA', 'MMM', 'PFE', 'WBA', 'DD'
+        # ]  # finrl.config.DOW_30_TICKER
         ticker_list = [
-            'AAPL', 'MSFT', 'JPM', 'V', 'RTX', 'PG', 'GS', 'NKE', 'DIS', 'AXP', 'HD',
-            'INTC', 'WMT', 'IBM', 'MRK', 'UNH', 'KO', 'CAT', 'TRV', 'JNJ', 'CVX', 'MCD',
-            'VZ', 'CSCO', 'XOM', 'BA', 'MMM', 'PFE', 'WBA', 'DD'
-        ]  # finrl.config.DOW_30_TICKER
+            'AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'ALGN', 'ALXN', 'AMAT', 'AMD', 'AMGN',
+            'AMZN', 'ASML', 'ATVI', 'BIIB', 'BKNG', 'BMRN', 'CDNS', 'CERN', 'CHKP', 'CMCSA',
+            'COST', 'CSCO', 'CSX', 'CTAS', 'CTSH', 'CTXS', 'DLTR', 'EA', 'EBAY', 'FAST',
+            'FISV', 'GILD', 'HAS', 'HSIC', 'IDXX', 'ILMN', 'INCY', 'INTC', 'INTU', 'ISRG',
+            'JBHT', 'KLAC', 'LRCX', 'MAR', 'MCHP', 'MDLZ', 'MNST', 'MSFT', 'MU', 'MXIM',
+            'NLOK', 'NTAP', 'NTES', 'NVDA', 'ORLY', 'PAYX', 'PCAR', 'PEP', 'QCOM', 'REGN',
+            'ROST', 'SBUX', 'SIRI', 'SNPS', 'SWKS', 'TTWO', 'TXN', 'VRSN', 'VRTX', 'WBA',
+            'WDC', 'WLTW', 'XEL', 'XLNX']  # finrl.config.NAS_74_TICKER
+        # print(raw_df.loc['2000-01-01'])
+        # j = 40000
+        # check_ticker_list = set(raw_df.loc.obj.tic[j:j + 200].tolist())
+        # print(len(check_ticker_list), check_ticker_list)
         # ticker_list = [
         #     'AMGN', 'AAPL', 'AMAT', 'INTC', 'PCAR', 'PAYX', 'MSFT', 'ADBE', 'CSCO', 'XLNX',
         #     'QCOM', 'COST', 'SBUX', 'FISV', 'CTXS', 'INTU', 'AMZN', 'EBAY', 'BIIB', 'CHKP',
@@ -146,38 +165,83 @@ class StockTradingEnv:
             processed_df.to_pickle(processed_data_path)
         print(f"| load data: {processed_data_path}")
 
-        # Training & Trading data split
-        train_df = data_split(processed_df, '2008-03-19', '2016-01-01')  # 1963/3223
-        eval_df = data_split(processed_df, '2016-01-01', '2021-01-01')  # 1260/3223
+        def data_split(df, start, end):
+            """split the dataset into training or testing using date
+            from finrl.preprocessing.data import data_split
+            """
+            data = df[(df.date >= start) & (df.date < end)]
+            data = data.sort_values(["date", "tic"], ignore_index=True)
+            data.index = data.date.factorize()[0]
+            return data
 
+        train_df = data_split(processed_df, start_date, start_eval_date)
+        eval_df = data_split(processed_df, start_eval_date, env_eval_date)
         return train_df, eval_df
 
     @staticmethod
-    def convert_df_to_ary(df, tech_indicator_list):
-        if tech_indicator_list is None:
-            tech_indicator_list = ['macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30',
-                                   'close_30_sma', 'close_60_sma']
+    def convert_df_to_ary(df, tech_indicator_list=None):
+        tech_indicator_list = [
+            'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30',
+            'close_30_sma', 'close_60_sma'
+        ] if tech_indicator_list is None else tech_indicator_list
 
         tech_ary = list()
         price_ary = list()
         for day in range(len(df.index.unique())):
             item = df.loc[day]
 
+            price_ary.append(item.close)  # adjusted close price (adjcp)
+
             tech_items = [item[tech].values.tolist() for tech in tech_indicator_list]
             tech_items_flatten = sum(tech_items, [])
             tech_ary.append(tech_items_flatten)
 
-            price_ary.append(item.close)  # adjusted close price (adjcp)
-
         price_ary = np.array(price_ary)
         tech_ary = np.array(tech_ary)
-        print(f'price_ary.shape: {price_ary.shape}')
-        print(f'tech_ary.shape: {tech_ary.shape}')
+        print(f'| price_ary.shape: {price_ary.shape}, tech_ary.shape: {tech_ary.shape}')
         return price_ary, tech_ary
 
+    def draw_cumulative_return(self, args, _torch) -> list:
+        state_dim = self.state_dim
+        action_dim = self.action_dim
 
-def check_stock_env():
-    env = StockTradingEnv()
+        agent_rl = args.agent
+        net_dim = args.net_dim
+        cwd = args.cwd
+
+        agent = agent_rl(net_dim, state_dim, action_dim)  # build AgentRL
+        act = agent.act
+        device = agent.device
+
+        state = self.reset()
+        episode_returns = list()  # the cumulative_return / initial_account
+        with _torch.no_grad():
+            for i in range(self.max_step):
+                s_tensor = _torch.as_tensor((state,), device=device)
+                a_tensor = act(s_tensor)
+                action = a_tensor.cpu().numpy()[0]  # not need detach(), because with torch.no_grad() outside
+                state, reward, done, _ = self.step(action)
+
+                total_asset = self.amount + (self.price_ary[self.day] * self.stocks).sum()
+                episode_return = total_asset / self.initial_total_asset
+                episode_returns.append(episode_return)
+                if done:
+                    break
+
+        import matplotlib.pyplot as plt
+        plt.plot(episode_returns)
+        plt.grid()
+        plt.title('cumulative return')
+        plt.xlabel('day')
+        plt.xlabel('multiple of initial_account')
+        plt.savefig(f'{cwd}/cumulative_return.jpg')
+        return episode_returns
+
+
+def check_stock_trading_env():
+    if_eval = True  # False
+
+    env = StockTradingEnv(if_eval=if_eval)
     action_dim = env.action_dim
 
     state = env.reset()
@@ -194,9 +258,20 @@ def check_stock_env():
         # print(';', len(next_state), env.day, reward)
         step += 1
 
-    print(f"step: {step}, UsedTime: {time() - timer:.3f}")  # 44 seconds
-    print(f"terminal reward {reward:.3f}")  # 44 seconds
-    print(f"episode return {env.episode_return:.3f}")  # 44 seconds
+    print(f"step: {step}, UsedTime: {time() - timer:.3f}")
+    print(f"terminal reward {reward:.3f}")
+    print(f"episode return {env.episode_return:.3f}")
+
+    '''draw_cumulative_return'''
+    from elegantrl.agent import AgentPPO
+    from elegantrl.run import Arguments
+    args = Arguments(if_on_policy=True)
+    args.agent = AgentPPO()
+
+    args.init_before_training()
+    args.agent.save_load_model(cwd='./AgentPPO/StockTradingEnv-v1_0', if_save=False)
+
+    env.draw_cumulative_return(args, torch)
 
 
 """Copy from FinRL"""
@@ -348,6 +423,8 @@ class FeatureEngineer:
         :param data: (df) pandas dataframe
         :return: (df) pandas dataframe
         """
+        from stockstats import StockDataFrame as Sdf  # for Sdf.retype
+
         df = data.copy()
         df = df.sort_values(by=['tic', 'date'])
         stock = Sdf.retype(df.copy())
@@ -444,15 +521,5 @@ class FeatureEngineer:
         return turbulence_index
 
 
-def data_split(df, start, end):
-    """split the dataset into training or testing using date
-    from finrl.preprocessing.data import data_split
-    """
-    data = df[(df.date >= start) & (df.date < end)]
-    data = data.sort_values(["date", "tic"], ignore_index=True)
-    data.index = data.date.factorize()[0]
-    return data
-
-
 if __name__ == '__main__':
-    check_stock_env()
+    check_stock_trading_env()
