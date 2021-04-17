@@ -1,5 +1,5 @@
 import gym
-from elegantrl.env import PreprocessEnv
+from elegantrl.envs import PreprocessEnv
 from elegantrl.run import Arguments, train_and_evaluate, train_and_evaluate_mp
 
 """[ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL)"""
@@ -114,27 +114,32 @@ def demo3_custom_env_fin_rl():
     '''choose an DRL algorithm'''
     args = Arguments(if_on_policy=True)
     args.agent = AgentPPO()
-    args.agent.if_use_gae = False
+    args.agent.if_use_gae = True
+    args.agent.lambda_entropy = 0.04
 
-    "TotalStep:  5e4, TargetReturn: 1.25, UsedTime:  20s, FinanceStock-v2"
-    "TotalStep: 20e4, TargetReturn: 1.50, UsedTime:  80s, FinanceStock-v2"
-    from elegantrl.env import FinanceStockEnv  # a standard env for ElegantRL, not need PreprocessEnv()
-    args.env = FinanceStockEnv(if_train=True, train_beg=0, train_len=1024)
-    args.env_eval = FinanceStockEnv(if_train=False, train_beg=0, train_len=1024)  # eva_len = 1699 - train_len
-    args.reward_scale = 2 ** 0  # RewardRange: 0 < 1.0 < 1.25 < 1.5 < 1.6
-    args.break_step = int(5e6)
-    args.net_dim = 2 ** 8
+    "TotalStep: 10e4, TargetReturn: 3.0, UsedTime:  200s, FinanceStock-v1"
+    "TotalStep: 20e4, TargetReturn: 4.0, UsedTime:  400s, FinanceStock-v1"
+    "TotalStep: 30e4, TargetReturn: 4.2, UsedTime:  600s, FinanceStock-v1"
+    from envs.FinRL.FinRL import StockTradingEnv
+    gamma = 0.995
+    args.env = StockTradingEnv(if_eval=False, gamma=gamma)
+    args.env_eval = StockTradingEnv(if_eval=True, gamma=gamma)
+
+    args.gamma = gamma
+    args.break_step = int(2e5)
+    args.net_dim = 2 ** 9
     args.max_step = args.env.max_step
-    args.max_memo = (args.max_step - 1) * 8
-    args.batch_size = 2 ** 11
-    args.repeat_times = 2 ** 4
-    args.eval_times1 = 2 ** 2
-    args.eval_times2 = 2 ** 4
-    args.if_allow_break = True
+    args.max_memo = args.max_step * 4
+    args.batch_size = 2 ** 10
+    args.repeat_times = 2 ** 3
+    args.eval_gap = 2 ** 4
+    args.eval_times1 = 2 ** 3
+    args.eval_times2 = 2 ** 5
+    args.if_allow_break = False
 
     '''train and evaluate'''
     # train_and_evaluate(args)
-    args.rollout_num = 8
+    args.rollout_num = 4
     train_and_evaluate_mp(args)
 
 
@@ -208,12 +213,6 @@ def demo4_bullet_mujoco_on_policy():
     "TotalStep:  3e6, TargetReturn: 1500, UsedTime:  2ks, AntBulletEnv-v0, PPO"
     "TotalStep: 10e6, TargetReturn: 2500, UsedTime:  6ks, AntBulletEnv-v0, PPO"
     "TotalStep: 46e6, TargetReturn: 3017, UsedTime: 25ks, AntBulletEnv-v0, PPO"
-    "TotalStep:  5e6, TargetReturn: 1500, UsedTime:  3ks, AntBulletEnv-v0, PPO if_use_dn"
-    "TotalStep: 15e6, TargetReturn: 2500, UsedTime: 10ks, AntBulletEnv-v0, PPO if_use_dn"
-    "TotalStep: 60e6, TargetReturn: 2949, UsedTime: 34ks, AntBulletEnv-v0, PPO if_use_dn"
-    "TotalStep:  2e6, TargetReturn: 1500, UsedTime:  2ks, AntBulletEnv-v0, PPO if_use_cn"
-    "TotalStep: 10e6, TargetReturn: 2500, UsedTime:  7ks, AntBulletEnv-v0, PPO if_use_cn"
-    "TotalStep: 53e6, TargetReturn: 2834, UsedTime: 35ks, AntBulletEnv-v0, PPO if_use_cn"
     args.env = PreprocessEnv(env=gym.make('AntBulletEnv-v0'))
 
     from elegantrl.agent import AgentPPO
@@ -229,6 +228,33 @@ def demo4_bullet_mujoco_on_policy():
     args.batch_size = 2 ** 11  # 10
     args.repeat_times = 2 ** 3
     args.eval_gap = 2 ** 8  # for Recorder
+    args.eva_size1 = 2 ** 1  # for Recorder
+    args.eva_size2 = 2 ** 3  # for Recorder
+
+    # train_and_evaluate(args)
+    args.rollout_num = 4
+    train_and_evaluate_mp(args)
+
+    "TotalStep:  6e6, TargetReward: 1500, UsedTime:  5ks, HumanoidBulletEnv-v0 PPO"
+    "TotalStep: 13e6, TargetReward: 2500, UsedTime: 10ks, HumanoidBulletEnv-v0 PPO"
+    "TotalStep: 32e6, TargetReward: 2956, UsedTime: 25ks, HumanoidBulletEnv-v0 PPO"
+    "TotalStep: 51e5, TargetReward: 3077, UsedTime: 40ks, HumanoidBulletEnv-v0 PPO"
+    args.env = PreprocessEnv(env=gym.make('HumanoidBulletEnv-v0'))
+    args.env.target_return = 2500
+
+    from elegantrl.agent import AgentPPO
+    args.agent = AgentPPO()
+    args.agent.if_use_gae = True
+    args.agent.lambda_entropy = 0.02
+    args.agent.lambda_gae_adv = 0.97
+
+    args.if_allow_break = False
+    args.break_step = int(4e6 * 8)
+    args.reward_scale = 2 ** -1
+    args.max_memo = args.env.max_step * 4
+    args.batch_size = 2 ** 11
+    args.repeat_times = 2 ** 3
+    args.eval_gap = 2 ** 9  # for Recorder
     args.eva_size1 = 2 ** 1  # for Recorder
     args.eva_size2 = 2 ** 3  # for Recorder
 

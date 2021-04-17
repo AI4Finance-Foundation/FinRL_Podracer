@@ -6,7 +6,7 @@ import numpy as np
 import numpy.random as rd
 from copy import deepcopy
 from elegantrl.replay import ReplayBuffer, ReplayBufferMP
-from elegantrl.env import PreprocessEnv
+from elegantrl.envs import PreprocessEnv
 
 """[ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL)"""
 
@@ -524,7 +524,7 @@ def get_episode_return(env, act, device) -> (float, int):
         a_tensor = act(s_tensor)
         if if_discrete:
             a_tensor = a_tensor.argmax(dim=1)
-        action = a_tensor.cpu().numpy()[0]  # not need detach(), because with torch.no_grad() outside
+        action = a_tensor.detach().cpu().numpy()[0]  # not need detach(), because with torch.no_grad() outside
         state, reward, done, _ = env.step(action)
         episode_return += reward
         if done:

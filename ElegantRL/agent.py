@@ -642,7 +642,7 @@ class AgentModSAC(AgentSAC):  # Modified SAC using reliable_lambda and TTUR (Two
                 '''objective of alpha (temperature parameter automatic adjustment)'''
                 action_pg, logprob = self.act.get_action_logprob(state)  # policy gradient
 
-                obj_alpha = (self.alpha_log * (logprob - self.target_entropy).detach()).mean() * reliable_lambda  # todo
+                obj_alpha = (self.alpha_log * (logprob - self.target_entropy).detach()).mean() * reliable_lambda
                 self.alpha_optimizer.zero_grad()
                 obj_alpha.backward()
                 self.alpha_optimizer.step()
@@ -657,6 +657,8 @@ class AgentModSAC(AgentSAC):  # Modified SAC using reliable_lambda and TTUR (Two
                 self.act_optimizer.zero_grad()
                 obj_actor.backward()
                 self.act_optimizer.step()
+                self.soft_update(self.cri_target, self.cri, self.soft_update_tau)
+
         return alpha.item(), self.obj_c
 
 
@@ -774,7 +776,7 @@ class AgentPPO(AgentBase):
         """
         states = torch.as_tensor((state,), dtype=torch.float32, device=self.device).detach()
         actions, noises = self.act.get_action_noise(states)
-        return actions[0].cpu().numpy(), noises[0].cpu().numpy()
+        return actions[0].detach().cpu().numpy(), noises[0].detach().cpu().numpy() # todo remove detach()
 
     def explore_env(self, env, buffer, target_step, reward_scale, gamma) -> int:
         buffer.empty_buffer_before_explore()  # NOTICE! necessary for on-policy

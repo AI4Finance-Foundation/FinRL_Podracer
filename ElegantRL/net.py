@@ -320,7 +320,7 @@ class CriticTwin(nn.Module):
         return self.net_q1(tmp), self.net_q2(tmp)  # two Q values
 
 
-'''Integrated Network (Parameter sharing)'''
+'''Parameter sharing Network'''
 
 
 class SharedDPG(nn.Module):  # DPG means deterministic policy gradient
@@ -579,8 +579,7 @@ class DenseNet(nn.Module):  # plan to hyper-param: layer_number
         return x3  # x2.shape==(-1, lay_dim*4)
 
 
-# ConcatNet
-class DenseNet1(nn.Module):  # concatenate
+class ConcatNet(nn.Module):  # concatenate
     def __init__(self, lay_dim):
         super().__init__()
         self.dense1 = nn.Sequential(nn.Linear(lay_dim, lay_dim), nn.ReLU(),
