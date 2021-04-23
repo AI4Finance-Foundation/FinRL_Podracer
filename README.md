@@ -96,7 +96,7 @@ The environment is designed in the OpenAI gym-style since it is considered as th
 
 ### Easy-to-customize Features
 + **Initial_capital**: the initial capital that the user wants to invest.
-+ **Tickers**: the stocks that the user wants to trade with.
++ **Tickers**: the stock pool that the user wants to trade with.
 + **Initial_stocks**: the initial amount of each stock and the default could be zero.
 + **Transaction_fee_percent**: the transaction fee of each transaction.
 + **Max_stock**: the user is able to define the maximum number of stocks that are allowed to trade per transaction.
