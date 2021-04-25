@@ -57,6 +57,7 @@ For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up
    + Parameter initialization,
    + Training loop,
    + Evaluator.
++ **StockTrading_Demo.ipynb** # One stock trading demo using PPO algorithm
 
 # Stock Trading Problem Formulation
 
