@@ -3,6 +3,8 @@ import numpy as np
 import numpy.random as rd
 import pandas as pd
 import yfinance as yf
+import matplotlib.pyplot as plt
+from stockstats import StockDataFrame as Sdf  # for Sdf.retype
 
 
 class StockTradingEnv:
@@ -259,7 +261,7 @@ class StockTradingEnv:
                 if done:
                     break
 
-        import matplotlib.pyplot as plt
+        
         plt.plot(episode_returns)
         plt.grid()
         plt.title('cumulative return')
@@ -297,7 +299,6 @@ class YahooDownloader:
         self.ticker_list = ticker_list
 
     def fetch_data(self) -> pd.DataFrame:
-        import yfinance as yf  # Yahoo Finance
         """Fetches data from Yahoo API
         Parameters
         ----------
@@ -411,7 +412,6 @@ class FeatureEngineer:
         :param data: (df) pandas dataframe
         :return: (df) pandas dataframe
         """
-        from stockstats import StockDataFrame as Sdf  # for Sdf.retype
 
         df = data.copy()
         df = df.sort_values(by=['tic', 'date'])
