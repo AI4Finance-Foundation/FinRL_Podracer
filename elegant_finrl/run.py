@@ -6,7 +6,7 @@ import numpy as np
 import numpy.random as rd
 
 from copy import deepcopy
-from agent import ReplayBuffer, ReplayBufferMP
+from elegant_finrl.agent import ReplayBuffer, ReplayBufferMP
 
 gym.logger.set_level(40)  # Block warning: 'WARN: Box bound precision lowered by casting to float32'
 
