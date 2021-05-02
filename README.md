@@ -27,7 +27,7 @@
 Currently, model-free deep reinforcement learning (DRL) algorithms: 
 + **DDPG, TD3, SAC, A2C, PPO, PPO(GAE)** for continuous actions
 + **DQN, DoubleDQN, D3QN** for discrete actions
-+ **MIP (learn to cut using natural evolutionay strategy)** for portfolio selection
++ **MILP (learn to cut using natural evolutionay strategy)** for portfolio optimization
 
 For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/). 
 
