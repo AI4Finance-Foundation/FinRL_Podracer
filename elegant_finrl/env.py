@@ -261,14 +261,6 @@ class StockTradingEnv:
         print(len(episode_returns))
         df_account_value = pd.DataFrame({'date':self.date_list,'account_value':episode_returns})
         return df_account_value
-        
-        #plt.plot(episode_returns)
-        #plt.grid()
-        #plt.title('cumulative return')
-        #plt.xlabel('day')
-        #plt.xlabel('multiple of initial_account')
-        #plt.savefig(f'{cwd}/cumulative_return.jpg')
-        #return episode_returns
     
     @staticmethod
     def get_daily_return(df, value_col_name="account_value"):
