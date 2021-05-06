@@ -274,10 +274,10 @@ class StockTradingEnv:
     @staticmethod
     def backtest_plot(account_value, baseline_start, baseline_end, baseline_ticker="^DJI"):
         df = deepcopy(account_value)
-        test_returns = get_daily_return(df, value_col_name="account_value")
+        test_returns = self.get_daily_return(df, value_col_name="account_value")
         
-        baseline_df = get_baseline(ticker=baseline_ticker, start=baseline_start, end=baseline_end)
-        baseline_returns = get_daily_return(baseline_df, value_col_name="close")
+        baseline_df = self.get_baseline(ticker=baseline_ticker, start=baseline_start, end=baseline_end)
+        baseline_returns = self.get_daily_return(baseline_df, value_col_name="close")
         
         with pyfolio.plotting.plotting_context(font_scale=1.1):
             pyfolio.create_full_tear_sheet(returns=test_returns, benchmark_rets=baseline_returns, set_context=False)
