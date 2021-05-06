@@ -13,7 +13,7 @@ class StockTradingEnv:
                  start_date='2009-01-01', end_date='2019-01-01', env_eval_date='2021-01-01',
                  ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
-        self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
+        self.date_list, self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
                                                        start_date, end_date, env_eval_date, )
         stock_dim = self.price_ary.shape[1]
     
@@ -41,7 +41,6 @@ class StockTradingEnv:
         self.target_return = 3.5
         self.episode_return = 0.0
         self.reward_scaling = reward_scaling
-        self.date_list = self.get_date(end_date, env_eval_date, ticker_list)
 
     def reset(self):
         self.day = 0
@@ -101,6 +100,7 @@ class StockTradingEnv:
         raw_data_path = f'{cwd}/StockTradingEnv_raw_data.df'
         processed_data_path = f'{cwd}/StockTradingEnv_processed_data.df'
         data_path_array = f'{cwd}/StockTradingEnv_arrays_float16.npz'
+        trade_data_path = f'{cwd}/StockTradingEnv_trading_data.df'
 
         tech_indicator_list = [
             'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30', 'close_30_sma', 'close_60_sma'
@@ -156,7 +156,9 @@ class StockTradingEnv:
         else:
             price_ary = train_price_ary
             tech_ary = train_tech_ary
-        return price_ary, tech_ary
+            
+        date = self.get_date(trade_data_path, end_date, env_eval_date, ticker_list)
+        return date, price_ary, tech_ary
 
     def processed_raw_data(self, raw_data_path, processed_data_path,
                            ticker_list, tech_indicator_list):
@@ -183,10 +185,15 @@ class StockTradingEnv:
         return processed_df
     
     @staticmethod
-    def get_date(start, end, ticker_list):
-        raw_df = YahooDownloader(start_date=start,
-                                     end_date=end,
-                                     ticker_list=ticker_list, ).fetch_data()
+    def get_date(path, start, end, ticker_list):
+        if os.path.exists(path):
+            raw_df = pd.read_pickle(path)  # DataFrame of Pandas
+            print(f"| load data: {raw_data_path}")
+        else:
+            raw_df = YahooDownloader(start_date=start,
+                                         end_date=end,
+                                         ticker_list=ticker_list, ).fetch_data()
+            raw_df.to_pickle(path)
         print("| YahooDownloader: finish processing date list")
         return raw_df.date.unique()
 
