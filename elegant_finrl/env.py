@@ -13,11 +13,10 @@ class StockTradingEnv:
                  start_date='2009-01-01', end_date='2019-01-01', env_eval_date='2021-01-01',
                  ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
-        self.buffer = YahooDownloader(end_date, env_eval_date, ticker_list=ticker_list).fetch_data()
         self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
                                                        start_date, end_date, env_eval_date, )
         stock_dim = self.price_ary.shape[1]
-
+    
         self.gamma = gamma
         self.max_stock = max_stock
         self.buy_cost_pct = buy_cost_pct
@@ -42,6 +41,7 @@ class StockTradingEnv:
         self.target_return = 3.5
         self.episode_return = 0.0
         self.reward_scaling = reward_scaling
+        self.date = self.get_date(end_date)
 
     def reset(self):
         self.day = 0
@@ -181,6 +181,13 @@ class StockTradingEnv:
         # if os.path.exists(processed_data_path):
         #     processed_df = pd.read_csv(processed_data_path)
         return processed_df
+    
+    def get_date(self, start):
+        for i in len(self.date_list):
+            if self.date_list[i] == start:
+                ind = i
+                break
+        return self.date_list[i:]
 
     @staticmethod
     def get_raw_data(raw_data_path, ticker_list):
@@ -193,6 +200,7 @@ class StockTradingEnv:
             raw_df = YahooDownloader(start_date="2000-01-01",
                                      end_date="2021-01-01",
                                      ticker_list=ticker_list, ).fetch_data()
+            self.date_list = raw_df.date.unique()
             raw_df.to_pickle(raw_data_path)
             print("| YahooDownloader: finish downloading data")
         return raw_df
