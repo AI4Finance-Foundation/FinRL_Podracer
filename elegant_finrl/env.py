@@ -10,7 +10,7 @@ from stockstats import StockDataFrame as Sdf  # for Sdf.retype
 class StockTradingEnv:
     def __init__(self, cwd='./envs/FinRL', gamma=0.99,
                  max_stock=1e2, initial_capital=1e6, buy_cost_pct=1e-3, sell_cost_pct=1e-3,
-                 start_date='2008-03-19', end_date='2016-01-01', env_eval_date='2021-01-01',
+                 start_date='2009-01-01', end_date='2019-01-01', env_eval_date='2021-01-01',
                  ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
         self.train_df = None
