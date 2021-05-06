@@ -188,7 +188,7 @@ class StockTradingEnv:
     def get_date(path, start, end, ticker_list):
         if os.path.exists(path):
             raw_df = pd.read_pickle(path)  # DataFrame of Pandas
-            print(f"| load data: {raw_data_path}")
+            print(f"| load data: {path}")
         else:
             raw_df = YahooDownloader(start_date=start,
                                          end_date=end,
@@ -256,7 +256,7 @@ class StockTradingEnv:
                 episode_returns.append(episode_return)
                 if done:
                     break
-
+        print(len(episode_returns))
         df_account_value = pd.DataFrame({'date':self.date_list,'account_value':episode_returns})
         return df_account_value
         
