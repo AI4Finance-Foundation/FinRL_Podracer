@@ -13,7 +13,6 @@ class StockTradingEnv:
                  start_date='2009-01-01', end_date='2019-01-01', env_eval_date='2021-01-01',
                  ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
-       
         self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
                                                        start_date, end_date, env_eval_date, )
         stock_dim = self.price_ary.shape[1]
@@ -42,7 +41,8 @@ class StockTradingEnv:
         self.target_return = 3.5
         self.episode_return = 0.0
         self.reward_scaling = reward_scaling
-        self.date = self.get_date(end_date)
+        if if_eval:
+            self.date_list = get_date(end_date, env_eval_date, ticker_list)
 
     def reset(self):
         self.day = 0
@@ -183,15 +183,16 @@ class StockTradingEnv:
         #     processed_df = pd.read_csv(processed_data_path)
         return processed_df
     
-    def get_date(self, start):
-        for i in len(self.date_list):
-            if self.date_list[i] == start:
-                ind = i
-                break
-        return self.date_list[i:]
+    @staticmethod
+    def get_date(start, end, ticker_list):
+        raw_df = YahooDownloader(start_date=start,
+                                     end_date=end,
+                                     ticker_list=ticker_list, ).fetch_data()
+        print("| YahooDownloader: finish processing date list")
+        return raw_df.date.unique()
 
     @staticmethod
-    def get_raw_data(self, raw_data_path, ticker_list):
+    def get_raw_data(raw_data_path, ticker_list):
         if os.path.exists(raw_data_path):
             raw_df = pd.read_pickle(raw_data_path)  # DataFrame of Pandas
             # print('| raw_df.columns.values:', raw_df.columns.values)
