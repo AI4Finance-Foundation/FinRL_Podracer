@@ -222,7 +222,7 @@ class StockTradingEnv:
         print(f'| price_ary.shape: {price_ary.shape}, tech_ary.shape: {tech_ary.shape}')
         return price_ary, tech_ary
 
-    def draw_cumulative_return(self, args, _torch) -> list:
+    def trade_prediction(self, args, _torch) -> list:
         state_dim = self.state_dim
         action_dim = self.action_dim
 
@@ -250,14 +250,16 @@ class StockTradingEnv:
                 if done:
                     break
 
+        df_account_value = pd.DataFrame({'date':self.date_list,'account_value':episode_returns})
+        return df_account_value
         
-        plt.plot(episode_returns)
-        plt.grid()
-        plt.title('cumulative return')
-        plt.xlabel('day')
-        plt.xlabel('multiple of initial_account')
-        plt.savefig(f'{cwd}/cumulative_return.jpg')
-        return episode_returns
+        #plt.plot(episode_returns)
+        #plt.grid()
+        #plt.title('cumulative return')
+        #plt.xlabel('day')
+        #plt.xlabel('multiple of initial_account')
+        #plt.savefig(f'{cwd}/cumulative_return.jpg')
+        #return episode_returns
     
 
 """Copy from FinRL"""
