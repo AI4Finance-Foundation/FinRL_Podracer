@@ -243,7 +243,7 @@ class StockTradingEnv:
         device = agent.device
 
         state = self.reset()
-        episode_returns = list()  # the cumulative_return / initial_account
+        episode_returns = [1.0]  # the cumulative_return / initial_account
         with _torch.no_grad():
             for i in range(self.max_step):
                 s_tensor = _torch.as_tensor((state,), device=device)
