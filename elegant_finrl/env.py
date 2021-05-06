@@ -41,7 +41,7 @@ class StockTradingEnv:
         self.target_return = 3.5
         self.episode_return = 0.0
         self.reward_scaling = reward_scaling
-        self.date_list = get_date(end_date, env_eval_date, ticker_list)
+        self.date_list = self.get_date(end_date, env_eval_date, ticker_list)
 
     def reset(self):
         self.day = 0
