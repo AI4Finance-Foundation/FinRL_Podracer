@@ -5,7 +5,9 @@ import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
 from stockstats import StockDataFrame as Sdf  # for Sdf.retype
-
+from pyfolio import timeseries
+import pyfolio
+from copy import deepcopy
 
 class StockTradingEnv:
     def __init__(self, cwd='./envs/FinRL', gamma=0.99,
@@ -268,6 +270,31 @@ class StockTradingEnv:
         #plt.savefig(f'{cwd}/cumulative_return.jpg')
         #return episode_returns
     
+    @staticmethod
+    def get_daily_return(df, value_col_name="account_value"):
+        df = deepcopy(df)
+        df["daily_return"] = df[value_col_name].pct_change(1)
+        df["date"] = pd.to_datetime(df["date"])
+        df.set_index("date", inplace=True, drop=True)
+        df.index = df.index.tz_localize("UTC")
+        return pd.Series(df["daily_return"], index=df.index)
+
+    @staticmethod
+    def backtest_plot(account_value, baseline_start, baseline_end, baseline_ticker="^DJI"):
+        df = deepcopy(account_value)
+        test_returns = get_daily_return(df, value_col_name="account_value")
+        
+        baseline_df = get_baseline(ticker=baseline_ticker, start=baseline_start, end=baseline_end)
+        baseline_returns = get_daily_return(baseline_df, value_col_name="close")
+        
+        with pyfolio.plotting.plotting_context(font_scale=1.1):
+            pyfolio.create_full_tear_sheet(returns=test_returns, benchmark_rets=baseline_returns, set_context=False)
+     
+    @staticmethod
+    def get_baseline(ticker, start, end):
+        dji = YahooDownloader(
+        start_date=start, end_date=end, ticker_list=[ticker]).fetch_data()
+        return dji
 
 """Copy from FinRL"""
 
