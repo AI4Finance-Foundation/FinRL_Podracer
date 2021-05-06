@@ -11,8 +11,10 @@ class StockTradingEnv:
     def __init__(self, cwd='./envs/FinRL', gamma=0.99,
                  max_stock=1e2, initial_capital=1e6, buy_cost_pct=1e-3, sell_cost_pct=1e-3,
                  start_date='2008-03-19', end_date='2016-01-01', env_eval_date='2021-01-01',
-                 ticker_list=None, tech_indicator_list=None, initial_stocks=None, if_eval=False):
+                 ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
+        self.train_df = None
+        self.eval_df = None
         self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
                                                        start_date, end_date, env_eval_date, )
         stock_dim = self.price_ary.shape[1]
@@ -40,6 +42,7 @@ class StockTradingEnv:
         self.if_discrete = False
         self.target_return = 3.5
         self.episode_return = 0.0
+        self.reward_scaling = reward_scaling
 
     def reset(self):
         self.day = 0
@@ -82,7 +85,7 @@ class StockTradingEnv:
                            self.tech_ary[self.day],)).astype(np.float32) * 2 ** -5
 
         total_asset = self.amount + (self.stocks * price).sum()
-        reward = (total_asset - self.total_asset) * 2 ** -14  # reward scaling
+        reward = (total_asset - self.total_asset) * self.reward_scaling  # reward scaling
         self.total_asset = total_asset
 
         self.gamma_reward = self.gamma_reward * self.gamma + reward
@@ -104,11 +107,6 @@ class StockTradingEnv:
             'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30', 'close_30_sma', 'close_60_sma'
         ] if tech_indicator_list is None else tech_indicator_list
 
-        # ticker_list = [
-        #     'AAPL', 'MSFT', 'JPM', 'V', 'RTX', 'PG', 'GS', 'NKE', 'DIS', 'AXP', 'HD',
-        #     'INTC', 'WMT', 'IBM', 'MRK', 'UNH', 'KO', 'CAT', 'TRV', 'JNJ', 'CVX', 'MCD',
-        #     'VZ', 'CSCO', 'XOM', 'BA', 'MMM', 'PFE', 'WBA', 'DD'
-        # ] if ticker_list is None else ticker_list  # finrl.config.DOW_30_TICKER
         ticker_list = [
             'AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'ALGN', 'ALXN', 'AMAT', 'AMD', 'AMGN',
             'AMZN', 'ASML', 'ATVI', 'BIIB', 'BKNG', 'BMRN', 'CDNS', 'CERN', 'CHKP', 'CMCSA',
@@ -119,22 +117,6 @@ class StockTradingEnv:
             'ROST', 'SBUX', 'SIRI', 'SNPS', 'SWKS', 'TTWO', 'TXN', 'VRSN', 'VRTX', 'WBA',
             'WDC', 'WLTW', 'XEL', 'XLNX'
         ] if ticker_list is None else ticker_list  # finrl.config.NAS_74_TICKER
-        # ticker_list = [
-        #     'AMGN', 'AAPL', 'AMAT', 'INTC', 'PCAR', 'PAYX', 'MSFT', 'ADBE', 'CSCO', 'XLNX',
-        #     'QCOM', 'COST', 'SBUX', 'FISV', 'CTXS', 'INTU', 'AMZN', 'EBAY', 'BIIB', 'CHKP',
-        #     'GILD', 'NLOK', 'CMCSA', 'FAST', 'ADSK', 'CTSH', 'NVDA', 'GOOGL', 'ISRG', 'VRTX',
-        #     'HSIC', 'BIDU', 'ATVI', 'ADP', 'ROST', 'ORLY', 'CERN', 'BKNG', 'MYL', 'MU',
-        #     'DLTR', 'ALXN', 'SIRI', 'MNST', 'AVGO', 'TXN', 'MDLZ', 'FB', 'ADI', 'WDC',
-        #     'REGN', 'LBTYK', 'VRSK', 'NFLX', 'TSLA', 'CHTR', 'MAR', 'ILMN', 'LRCX', 'EA',
-        #     'AAL', 'WBA', 'KHC', 'BMRN', 'JD', 'SWKS', 'INCY', 'PYPL', 'CDW', 'FOXA', 'MXIM',
-        #     'TMUS', 'EXPE', 'TCOM', 'ULTA', 'CSX', 'NTES', 'MCHP', 'CTAS', 'KLAC', 'HAS',
-        #     'JBHT', 'IDXX', 'WYNN', 'MELI', 'ALGN', 'CDNS', 'WDAY', 'SNPS', 'ASML', 'TTWO',
-        #     'PEP', 'NXPI', 'XEL', 'AMD', 'NTAP', 'VRSN', 'LULU', 'WLTW', 'UAL'
-        # ] if ticker_list is None else ticker_list  # finrl.config.NAS_100_TICKER
-        # print(raw_df.loc['2000-01-01'])
-        # j = 40000
-        # check_ticker_list = set(raw_df.loc.obj.tic[j:j + 200].tolist())
-        # print(len(check_ticker_list), check_ticker_list)
 
         '''get: train_price_ary, train_tech_ary, eval_price_ary, eval_tech_ary'''
         if os.path.exists(data_path_array):
@@ -154,11 +136,11 @@ class StockTradingEnv:
                 data.index = data.date.factorize()[0]
                 return data
 
-            train_df = data_split(processed_df, start_date, end_date)
-            eval_df = data_split(processed_df, end_date, env_eval_date)
+            self.train_df = data_split(processed_df, start_date, end_date)
+            self.eval_df = data_split(processed_df, end_date, env_eval_date)
 
-            train_price_ary, train_tech_ary = self.convert_df_to_ary(train_df, tech_indicator_list)
-            eval_price_ary, eval_tech_ary = self.convert_df_to_ary(eval_df, tech_indicator_list)
+            train_price_ary, train_tech_ary = self.convert_df_to_ary(self.train_df, tech_indicator_list)
+            eval_price_ary, eval_tech_ary = self.convert_df_to_ary(self.eval_df, tech_indicator_list)
 
             np.savez_compressed(data_path_array,
                                 train_price_ary=train_price_ary.astype(np.float16),
