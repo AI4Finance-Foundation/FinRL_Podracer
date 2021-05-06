@@ -201,7 +201,6 @@ class StockTradingEnv:
             raw_df = YahooDownloader(start_date="2000-01-01",
                                      end_date="2021-01-01",
                                      ticker_list=ticker_list, ).fetch_data()
-            self.date_list = raw_df.date.unique()
             raw_df.to_pickle(raw_data_path)
             print("| YahooDownloader: finish downloading data")
         return raw_df
