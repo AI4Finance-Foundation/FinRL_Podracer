@@ -13,8 +13,7 @@ class StockTradingEnv:
                  start_date='2009-01-01', end_date='2019-01-01', env_eval_date='2021-01-01',
                  ticker_list=None, tech_indicator_list=None, initial_stocks=None, reward_scaling=2 ** -14, if_eval=False):
 
-        self.train_df = None
-        self.eval_df = None
+        self.buffer = YahooDownloader(end_date, end_eval_date, ticker_list=ticker_list).fetch_data()
         self.price_ary, self.tech_ary = self.load_data(cwd, if_eval, ticker_list, tech_indicator_list,
                                                        start_date, end_date, env_eval_date, )
         stock_dim = self.price_ary.shape[1]
@@ -136,11 +135,11 @@ class StockTradingEnv:
                 data.index = data.date.factorize()[0]
                 return data
 
-            self.train_df = data_split(processed_df, start_date, end_date)
-            self.eval_df = data_split(processed_df, end_date, env_eval_date)
+            train_df = data_split(processed_df, start_date, end_date)
+            eval_df = data_split(processed_df, end_date, env_eval_date)
 
-            train_price_ary, train_tech_ary = self.convert_df_to_ary(self.train_df, tech_indicator_list)
-            eval_price_ary, eval_tech_ary = self.convert_df_to_ary(self.eval_df, tech_indicator_list)
+            train_price_ary, train_tech_ary = self.convert_df_to_ary(train_df, tech_indicator_list)
+            eval_price_ary, eval_tech_ary = self.convert_df_to_ary(eval_df, tech_indicator_list)
 
             np.savez_compressed(data_path_array,
                                 train_price_ary=train_price_ary.astype(np.float16),
