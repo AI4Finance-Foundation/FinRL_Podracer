@@ -57,13 +57,3 @@ args.rollout_num = 2 # the number of rollout workers (larger is not always faste
 
 train_and_evaluate_mp(args) # the training process will terminate once it reaches the target reward.
 
-args = Arguments(if_on_policy=True)
-args.agent = AgentPPO()
-args.env = StockTradingEnv(cwd='./', if_eval=True)
-args.if_remove = False
-args.cwd = './AgentPPO/StockTradingEnv-v1_0'
-args.init_before_training()
-
-prediction = args.env.trade_prediction(args, torch)
-
-args.env.backtest_plot(prediction, baseline_ticker = '^DJI', baseline_start = '2019-01-01', baseline_end = '2021-01-01')
