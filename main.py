@@ -11,15 +11,9 @@ args.agent.if_use_gae = True
 args.agent.lambda_entropy = 0.04
 
 # Environment
-tickers = [
-  'AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'ALGN', 'ALXN', 'AMAT', 'AMD', 'AMGN',
-  'AMZN', 'ASML', 'ATVI', 'BIIB', 'BKNG', 'BMRN', 'CDNS', 'CERN', 'CHKP', 'CMCSA',
-  'COST', 'CSCO', 'CSX', 'CTAS', 'CTSH', 'CTXS', 'DLTR', 'EA', 'EBAY', 'FAST',
-  'FISV', 'GILD', 'HAS', 'HSIC', 'IDXX', 'ILMN', 'INCY', 'INTC', 'INTU', 'ISRG',
-  'JBHT', 'KLAC', 'LRCX', 'MAR', 'MCHP', 'MDLZ', 'MNST', 'MSFT', 'MU', 'MXIM',
-  'NLOK', 'NTAP', 'NTES', 'NVDA', 'ORLY', 'PAYX', 'PCAR', 'PEP', 'QCOM', 'REGN',
-  'ROST', 'SBUX', 'SIRI', 'SNPS', 'SWKS', 'TTWO', 'TXN', 'VRSN', 'VRTX', 'WBA',
-  'WDC', 'WLTW', 'XEL', 'XLNX']  # finrl.config.NAS_74_TICKER
+tickers = ['AAPL', 'MSFT', 'JPM', 'V', 'RTX', 'PG', 'GS', 'NKE', 'DIS', 'AXP', 
+           'HD', 'INTC', 'WMT', 'IBM', 'MRK', 'UNH', 'KO', 'CAT', 'TRV', 'JNJ',
+           'CVX', 'MCD', 'VZ', 'CSCO', 'XOM', 'BA', 'MMM', 'PFE', 'WBA', 'DD']
 
 tech_indicator_list = [
   'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30',
@@ -31,21 +25,21 @@ initial_capital = 1e6
 initial_stocks = np.zeros(len(tickers), dtype=np.float32)
 buy_cost_pct = 1e-3
 sell_cost_pct = 1e-3
-start_date = '2008-03-19'
-start_eval_date = '2016-01-01'
+start_date = '2009-01-01'
+start_eval_date = '2019-01-01'
 end_eval_date = '2021-01-01'
 
 args.env = StockTradingEnv('./', gamma, max_stock, initial_capital, buy_cost_pct, 
                            sell_cost_pct, start_date, start_eval_date, 
                            end_eval_date, tickers, tech_indicator_list, 
-                           initial_stocks, if_eval=False)
+                           initial_stocks, reward_scaling=1e-4, if_eval=False)
 args.env_eval = StockTradingEnv('./', gamma, max_stock, initial_capital, buy_cost_pct, 
                            sell_cost_pct, start_date, start_eval_date, 
                            end_eval_date, tickers, tech_indicator_list, 
-                           initial_stocks, if_eval=True)
+                           initial_stocks, reward_scaling=1e-4, if_eval=True)
 
-args.env.target_reward = 3
-args.env_eval.target_reward = 3
+args.env.target_reward = 2
+args.env_eval.target_reward = 2
 
 # Hyperparameters
 args.gamma = gamma
@@ -70,4 +64,6 @@ args.if_remove = False
 args.cwd = './AgentPPO/StockTradingEnv-v1_0'
 args.init_before_training()
 
-args.env.draw_cumulative_return(args, torch)
+prediction = args.env.trade_prediction(args, torch)
+
+args.env.backtest_plot(prediction, baseline_ticker = '^DJI', baseline_start = '2019-01-01', baseline_end = '2021-01-01')
