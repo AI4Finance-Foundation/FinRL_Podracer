@@ -272,9 +272,8 @@ class StockTradingEnv:
         df.set_index("date", inplace=True, drop=True)
         df.index = df.index.tz_localize("UTC")
         return pd.Series(df["daily_return"], index=df.index)
-
-    @staticmethod
-    def backtest_plot(account_value, baseline_start, baseline_end, baseline_ticker="^DJI"):
+    
+    def backtest_plot(self.account_value, baseline_start, baseline_end, baseline_ticker="^DJI"):
         df = deepcopy(account_value)
         test_returns = self.get_daily_return(df, value_col_name="account_value")
         
