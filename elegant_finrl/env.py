@@ -258,9 +258,9 @@ class StockTradingEnv:
                 episode_returns.append(episode_return)
                 if done:
                     break
-        print(len(episode_returns))
-        print(len(self.date_list))
-        print(self.date_list)
+        # print(len(episode_returns))
+        # print(len(self.date_list))
+        # print(self.date_list)
         df_account_value = pd.DataFrame({'date':self.date_list,'account_value':episode_returns})
         return df_account_value
     
