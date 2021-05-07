@@ -35,7 +35,7 @@ class StockTradingEnv:
         self.gamma_reward = 0.0
 
         # environment information
-        self.env_name = 'StockTradingEnv-v1'
+        self.env_name = 'StockTradingEnv-v2'
         self.state_dim = 1 + 2 * stock_dim + self.tech_ary.shape[1]
         self.action_dim = stock_dim
         self.max_step = len(self.price_ary) - 1
