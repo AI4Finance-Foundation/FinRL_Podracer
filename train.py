@@ -1,6 +1,7 @@
 from elegant_finrl.run import *
 from elegant_finrl.agent import AgentPPO, AgentDDPG
 from elegant_finrl.env import StockTradingEnv
+from elegant_finrl.config import config
 import yfinance as yf
 from stockstats import StockDataFrame as Sdf
 
@@ -11,9 +12,7 @@ args.agent.if_use_gae = True
 args.agent.lambda_entropy = 0.04
 
 # Environment
-tickers = ['AAPL', 'MSFT', 'JPM', 'V', 'RTX', 'PG', 'GS', 'NKE', 'DIS', 'AXP', 
-           'HD', 'INTC', 'WMT', 'IBM', 'MRK', 'UNH', 'KO', 'CAT', 'TRV', 'JNJ',
-           'CVX', 'MCD', 'VZ', 'CSCO', 'XOM', 'BA', 'MMM', 'PFE', 'WBA', 'DD']
+tickers = config.SP_500_TICKER
 
 tech_indicator_list = [
   'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30',
@@ -32,11 +31,11 @@ end_eval_date = '2021-01-01'
 args.env = StockTradingEnv('./', gamma, max_stock, initial_capital, buy_cost_pct, 
                            sell_cost_pct, start_date, start_eval_date, 
                            end_eval_date, tickers, tech_indicator_list, 
-                           initial_stocks, reward_scaling=1e-4, if_eval=False)
+                           initial_stocks, reward_scaling=2 ** -14, if_eval=False)
 args.env_eval = StockTradingEnv('./', gamma, max_stock, initial_capital, buy_cost_pct, 
                            sell_cost_pct, start_date, start_eval_date, 
                            end_eval_date, tickers, tech_indicator_list, 
-                           initial_stocks, reward_scaling=1e-4, if_eval=True)
+                           initial_stocks, reward_scaling=2 ** -14, if_eval=True)
 
 args.env.target_reward = 2
 args.env_eval.target_reward = 2
