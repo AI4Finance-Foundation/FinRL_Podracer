@@ -12,7 +12,7 @@ args.agent.if_use_gae = True
 args.agent.lambda_entropy = 0.04
 
 # Environment
-tickers = config.SP_500_TICKER
+tickers = config.NAS_100_TICKER
 
 tech_indicator_list = [
   'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30',
