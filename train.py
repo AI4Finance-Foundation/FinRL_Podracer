@@ -1,7 +1,7 @@
 from elegant_finrl.run import *
 from elegant_finrl.agent import AgentPPO, AgentDDPG
 from elegant_finrl.env import StockTradingEnv
-from elegant_finrl.config import config
+import elegant_finrl.config as config
 import yfinance as yf
 from stockstats import StockDataFrame as Sdf
 
