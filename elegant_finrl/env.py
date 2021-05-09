@@ -119,6 +119,11 @@ class StockTradingEnv:
             'WDC', 'WLTW', 'XEL', 'XLNX'
         ] if ticker_list is None else ticker_list  # finrl.config.NAS_74_TICKER
 
+        print(raw_df.loc['2000-01-01'])
+        j = 40000
+        check_ticker_list = set(raw_df.loc.obj.tic[j:j + 200].tolist())
+        print(len(check_ticker_list), check_ticker_list)
+        
         '''get: train_price_ary, train_tech_ary, eval_price_ary, eval_tech_ary'''
         if os.path.exists(data_path_array):
             load_dict = np.load(data_path_array)
