@@ -210,7 +210,7 @@ class StockTradingEnv:
             raw_df = YahooDownloader(start_date="2000-01-01",
                                      end_date="2021-01-01",
                                      ticker_list=ticker_list, ).fetch_data()
-            print(raw_df.loc['2000-01-01'])
+            # print(raw_df.loc['2000-01-01'])
             j = 40000
             check_ticker_list = set(raw_df.loc.obj.tic[j:j + 200].tolist())
             print(len(check_ticker_list), check_ticker_list)
