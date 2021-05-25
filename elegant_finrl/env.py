@@ -177,7 +177,6 @@ class StockTradingEnv:
             raw_df = self.get_raw_data(raw_data_path, ticker_list)
 
             processed_df = fe.preprocess_data(raw_df)
-            processed_df.head()
             processed_df.to_pickle(processed_data_path)
             print("| FeatureEngineer: finish processing data")
 
@@ -438,7 +437,6 @@ class FeatureEngineer:
 
         df = data.copy()
         df = df.sort_values(by=['tic', 'date'])
-        print(df.head())
         stock = Sdf.retype(df.copy())
         unique_ticker = stock.tic.unique()
 
@@ -450,7 +448,6 @@ class FeatureEngineer:
                     temp_indicator = pd.DataFrame(temp_indicator)
                     temp_indicator['tic'] = unique_ticker[i]
                     temp_indicator['date'] = df[df.tic == unique_ticker[i]]['date'].to_list()
-                    print(temp_indicator.head())
                     indicator_df = indicator_df.append(
                         temp_indicator, ignore_index=True
                     )
