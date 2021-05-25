@@ -450,6 +450,7 @@ class FeatureEngineer:
                     temp_indicator = pd.DataFrame(temp_indicator)
                     temp_indicator['tic'] = unique_ticker[i]
                     temp_indicator['date'] = df[df.tic == unique_ticker[i]]['date'].to_list()
+                    print(temp_indicator.head())
                     indicator_df = indicator_df.append(
                         temp_indicator, ignore_index=True
                     )
