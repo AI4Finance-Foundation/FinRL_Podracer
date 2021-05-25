@@ -177,6 +177,7 @@ class StockTradingEnv:
             raw_df = self.get_raw_data(raw_data_path, ticker_list)
 
             processed_df = fe.preprocess_data(raw_df)
+            processed_df.head()
             processed_df.to_pickle(processed_data_path)
             print("| FeatureEngineer: finish processing data")
 
