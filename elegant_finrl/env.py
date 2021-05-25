@@ -437,6 +437,7 @@ class FeatureEngineer:
 
         df = data.copy()
         df = df.sort_values(by=['tic', 'date'])
+        print(df.head())
         stock = Sdf.retype(df.copy())
         unique_ticker = stock.tic.unique()
 
