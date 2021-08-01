@@ -8,6 +8,7 @@ from stockstats import StockDataFrame as Sdf  # for Sdf.retype
 from pyfolio import timeseries
 import pyfolio
 from copy import deepcopy
+from datetime import datetime
 
 class StockTradingEnv:
     def __init__(self, cwd='./envs/FinRL', gamma=0.99,
@@ -197,6 +198,8 @@ class StockTradingEnv:
                                          ticker_list=ticker_list, ).fetch_data()
             raw_df.to_pickle(path)
         print("| YahooDownloader: finish processing date list")
+        raw_df["date"] = pd.to_datetime(raw_df.date)
+        raw_df = raw_df[raw_df.date >= datetime.strptime(start, "%Y-%m-%d")]
         return raw_df.date.unique()
 
     @staticmethod
@@ -275,7 +278,7 @@ class StockTradingEnv:
         df["date"] = pd.to_datetime(df["date"])
         df.set_index("date", inplace=True, drop=True)
         df.index = df.index.tz_localize("UTC")
-        return pd.Series(df["single-stock-baseline"], index=df.index)
+        return pd.Series(df["daily_return"], index=df.index)
     
     def backtest_plot(self, account_value, baseline_start, baseline_end, baseline_ticker="^DJI"):
         df = deepcopy(account_value)
