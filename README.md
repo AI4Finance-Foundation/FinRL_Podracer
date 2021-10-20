@@ -1,4 +1,6 @@
-# GPU-Podracer
+# FinRL-Podracer
+
+  **News**: We are cleaning the codes, and will release it soon.
 
   This project can be regarded as [**FinRL**](https://github.com/AI4Finance-LLC/FinRL-Library) **2.0**: intermediate-level framework for full-stack developers and professionals. It borrows ideas from [ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
