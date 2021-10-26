@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-"""[ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL)"""
-
 
 class ActorPPO(nn.Module):
     def __init__(self, mid_dim, state_dim, action_dim):
@@ -43,7 +41,7 @@ class ActorPPO(nn.Module):
         return -(self.a_logstd + self.sqrt_2pi_log + delta).sum(1)  # old_logprob
 
 
-class CriticAdv(nn.Module):
+class CriticPPO(nn.Module):
     def __init__(self, mid_dim, state_dim, _action_dim, if_use_dn=False):
         super().__init__()
         if if_use_dn:

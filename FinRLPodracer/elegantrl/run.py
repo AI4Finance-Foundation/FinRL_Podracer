@@ -8,8 +8,6 @@ from FinRLPodracer.elegantrl.evaluator import Evaluator
 from FinRLPodracer.elegantrl.replay import ReplayBufferMP
 from FinRLPodracer.elegantrl.env import deepcopy_or_rebuild_env
 
-"""[ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL)"""
-
 
 class Arguments:
     def __init__(self, agent=None, env=None, if_on_policy=False):

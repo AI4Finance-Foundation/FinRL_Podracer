@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4e1bb2e-798a-458f-b952-255bf573f4dc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StockTrading_Demo.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/env.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/net.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elegant_finrl/run.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/multiprocess.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py" beforeDir="false" afterPath="$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py" beforeDir="false" afterPath="$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,23 +25,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="LICENSE" value="1" />
-          <entry key="py" value="11" />
+          <entry key="py" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="11" />
+          <entry key="Python" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="8" />
+          <entry key="dummy" value="3" />
+          <entry key="py" value="33" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="8" />
+          <entry key="PLAIN_TEXT" value="3" />
+          <entry key="Python" value="33" />
         </counts>
       </usages-collector>
     </session>
@@ -56,22 +51,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1569">
-              <caret line="5" column="59" selection-start-line="5" selection-start-column="59" selection-end-line="5" selection-end-column="59" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/check.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="986">
-              <caret line="130" column="20" lean-forward="true" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
+            <state relative-caret-position="748">
+              <caret line="122" column="31" lean-forward="true" selection-start-line="122" selection-start-column="31" selection-end-line="122" selection-end-column="31" />
               <folding>
                 <element signature="e#1#42#0" expanded="true" />
               </folding>
@@ -79,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="817" lean-forward="true" selection-start-line="817" selection-end-line="817" />
+            <state relative-caret-position="48">
+              <caret line="13" column="54" selection-start-line="13" selection-start-column="54" selection-end-line="13" selection-end-column="54" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -94,42 +77,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="83">
-              <caret line="8" column="63" lean-forward="true" selection-start-line="8" selection-start-column="63" selection-end-line="8" selection-end-column="63" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/evaluator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2317">
+            <state relative-caret-position="100">
+              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -161,7 +110,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FinRLPodracer/FinRL/StockTrading.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-15351">
@@ -174,6 +123,12 @@
       </file>
     </leaf>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>commg</find>
+      <find>pipe_list</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -181,12 +136,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/FinRLPodracer/beta0.py" />
-        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py" />
         <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/check.py" />
-        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py" />
-        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py" />
         <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/demo.py" />
         <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/env.py" />
+        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py" />
+        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py" />
+        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py" />
+        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py" />
+        <option value="$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py" />
       </list>
     </option>
   </component>
@@ -251,6 +208,129 @@
       </list>
     </option>
   </component>
+  <component name="RunManager" selected="Python.check">
+    <configuration name="agent" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FinRL_Podracer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FinRLPodracer/elegantrl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="check" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FinRL_Podracer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FinRLPodracer/elegantrl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FinRLPodracer/elegantrl/check.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="evaluator" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FinRL_Podracer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FinRLPodracer/elegantrl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FinRLPodracer/elegantrl/evaluator.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="net" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FinRL_Podracer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FinRLPodracer/elegantrl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="replay" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="FinRL_Podracer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FinRLPodracer/elegantrl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.agent" />
+      <item itemvalue="Python.net" />
+      <item itemvalue="Python.evaluator" />
+      <item itemvalue="Python.replay" />
+      <item itemvalue="Python.check" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.check" />
+        <item itemvalue="Python.replay" />
+        <item itemvalue="Python.evaluator" />
+        <item itemvalue="Python.net" />
+        <item itemvalue="Python.agent" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -277,7 +357,7 @@
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -306,78 +386,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1569">
-          <caret line="5" column="59" selection-start-line="5" selection-start-column="59" selection-end-line="5" selection-end-column="59" />
+        <state relative-caret-position="255">
+          <caret line="126" lean-forward="true" selection-start-line="126" selection-end-line="126" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/check.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="986">
-          <caret line="130" column="20" lean-forward="true" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
-          <folding>
-            <element signature="e#1#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="817" lean-forward="true" selection-start-line="817" selection-end-line="817" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/net.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="375">
+          <caret line="48" column="38" lean-forward="true" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/evaluator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2317">
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/demo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="141" column="23" selection-start-line="141" selection-start-column="23" selection-end-line="141" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="8" column="63" lean-forward="true" selection-start-line="8" selection-start-column="63" selection-end-line="8" selection-end-column="63" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -395,6 +417,66 @@
     <entry file="file://$PROJECT_DIR$/FinRLPodracer/FinRL/StockTrading.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-15351">
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/demo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="930">
+          <caret line="141" column="23" selection-start-line="141" selection-start-column="23" selection-end-line="141" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/evaluator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="50" lean-forward="true" selection-start-line="9" selection-start-column="50" selection-end-line="9" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/replay.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1767">
+          <caret line="210" selection-start-line="210" selection-end-line="214" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/check.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="122" column="31" lean-forward="true" selection-start-line="122" selection-start-column="31" selection-end-line="122" selection-end-column="31" />
+          <folding>
+            <element signature="e#1#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FinRLPodracer/elegantrl/run_ga.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="13" column="54" selection-start-line="13" selection-start-column="54" selection-end-line="13" selection-end-column="54" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

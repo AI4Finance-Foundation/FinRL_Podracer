@@ -3,10 +3,13 @@ import os
 import torch
 import numpy as np
 from copy import deepcopy
-from FinRLPodracer.elegantrl.net import ActorPPO, CriticAdv
+from FinRLPodracer.elegantrl.net import ActorPPO, CriticPPO
 
 
 class AgentBase:
+    """
+    Base Class
+    """
     def __init__(self):
         self.state = None
         self.device = None
@@ -21,16 +24,8 @@ class AgentBase:
         self.act_target = self.if_use_act_target = None
 
     def init(self, net_dim, state_dim, action_dim, learning_rate=1e-4, if_use_per=False, gpu_id=0):
-        """initialize the self.object in `__init__()`
-
-        replace by different DRL algorithms
-        explict call self.init() for multiprocessing.
-
-        `int net_dim` the dimension of networks (the width of neural networks)
-        `int state_dim` the dimension of state (the number of state vector)
-        `int action_dim` the dimension of action (the number of discrete action)
-        `float learning_rate`: learning rate of optimizer
-        `bool if_per_or_gae`: PER (off-policy) or GAE (on-policy) for sparse reward
+        """
+        Explict call ``self.init()`` to overwrite the ``self.object`` in ``__init__()`` for multiprocessing.
         """
         self.device = torch.device(f"cuda:{gpu_id}" if (torch.cuda.is_available() and (gpu_id >= 0)) else "cpu")
         self.action_dim = action_dim
@@ -46,21 +41,23 @@ class AgentBase:
         del self.Cri, self.Act
 
     def select_action(self, state) -> np.ndarray:
-        """Select actions for exploration
+        """
+        Select actions given a state.
 
-        `array state` state.shape==(state_dim, )
-        return `array action` action.shape==(action_dim, ),  -1 < action < +1
+        :param state: a state in a shape (state_dim, ).
+        :return: an actions in a shape (action_dim, ) where each action is clipped into range(-1, 1).
         """
         pass  # sample form an action distribution
 
     def explore_env(self, env, target_step, reward_scale, gamma) -> list:
-        """actor explores in env, then returns the trajectory_list (env transition)
+        """
+        Collect trajectories through the actor-environment interaction for a **single** environment instance.
 
-        `object env` RL training environment. env.reset() env.step()
-        `int target_step` explored target_step number of step in env
-        `float reward_scale` scale reward, 'reward * reward_scale'
-        `float gamma` discount factor, 'mask = 0.0 if done else gamma'
-        return `list trajectory_list` buffer.extend_buffer_from_trajectory(trajectory_list)
+        :param env: the DRL environment instance.
+        :param target_step: the total step for the interaction.
+        :param reward_scale: a reward scalar to clip the reward.
+        :param gamma: the discount factor.
+        :return: a list of trajectories [traj, ...] where each trajectory is a list of transitions [(state, other), ...].
         """
         trajectory_list = list()
 
@@ -76,16 +73,14 @@ class AgentBase:
         return trajectory_list
 
     def update_net(self, buffer, batch_size, repeat_times, soft_update_tau) -> tuple:
-        """update the neural network by sampling batch data from ReplayBuffer
+        """
+        Update the neural networks by sampling batch data from ``ReplayBuffer``.
 
-        replace by different DRL algorithms.
-        return the objective value as training information to help fine-tuning
-
-        `buffer` Experience replay buffer.
-        `int batch_size` sample batch_size of data for Stochastic Gradient Descent
-        `float repeat_times` the times of sample batch = int(target_step * repeat_times) in off-policy
-        `float soft_update_tau` target_net = target_net * (1-tau) + current_net * tau
-        `return tuple` training logging. tuple = (float, float, ...)
+        :param buffer: the ReplayBuffer instance that stores the trajectories.
+        :param batch_size: the size of batch data for Stochastic Gradient Descent (SGD).
+        :param repeat_times: the re-using times of each trajectory.
+        :param soft_update_tau: the soft update parameter.
+        :return: a tuple of the log information.
         """
 
     @staticmethod
@@ -96,25 +91,10 @@ class AgentBase:
 
     @staticmethod
     def optim_update_amp(optimizer, objective):  # automatic mixed precision
-        # # amp_scale = torch.cuda.amp.GradScaler()
-
-        # optimizer.zero_grad()
-        # amp_scale.scale(objective).backward()  # loss.backward()
-        # amp_scale.unscale_(optimizer)  # amp
-        #
-        # # from torch.nn.utils import clip_grad_norm_
-        # clip_grad_norm_(model.parameters(), max_norm=3.0)  # amp, clip_grad_norm_
-        # amp_scale.step(optimizer)  # optimizer.step()
-        # amp_scale.update()  # optimizer.step()
         pass
 
     @staticmethod
     def soft_update(target_net, current_net, tau):
-        """soft update a target network via current network
-
-        `nn.Module target_net` target network update via a current network, it is more stable
-        `nn.Module current_net` current network update via an optimizer
-        """
         for tar, cur in zip(target_net.parameters(), current_net.parameters()):
             tar.data.copy_(cur.data * tau + tar.data * (1 - tau))
 
@@ -157,28 +137,18 @@ class AgentPPO(AgentBase):
         self.srdan_list = list()
 
         self.Act = ActorPPO
-        self.Cri = CriticAdv
+        self.Cri = CriticPPO
 
     def init(self, net_dim, state_dim, action_dim, learning_rate=1e-4, if_use_gae=False, gpu_id=0):
         super().init(net_dim, state_dim, action_dim, learning_rate, if_use_gae, gpu_id)
         self.get_reward_sum = self.get_reward_sum_gae if if_use_gae else self.get_reward_sum_raw
 
     def select_action(self, state):
-        """
-        `array state` state.shape = (state_dim, )
-        return `array action` action.shape = (action_dim, )
-        return `array noise` noise.shape = (action_dim, )
-        """
         states = torch.as_tensor((state,), dtype=torch.float32, device=self.device)
         actions, noises = self.act.get_action(states)  # plan to be get_action_a_noise
         return actions[0].detach().cpu().numpy(), noises[0].detach().cpu().numpy()
 
     def select_actions(self, states):
-        """
-        `tensor state` state.shape = (batch_size, state_dim)
-        return `tensor action` action.shape = (batch_size, action_dim)
-        return `tensor noise` noise.shape = (batch_size, action_dim)
-        """
         actions, noises = self.act.get_action(states)  # plan to be get_action_a_noise
         return actions, noises
 

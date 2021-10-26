@@ -4,8 +4,6 @@ import torch
 import numpy as np
 import numpy.random as rd
 
-"""[ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL)"""
-
 
 class ReplayBuffer:
     def __init__(self, max_len, state_dim, action_dim, if_use_per, gpu_id=0):
