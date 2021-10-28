@@ -390,9 +390,10 @@ def check_stock_trading_env():
     done = False
     episode_return = 0
 
-    # state = env.reset()
+    env.reset()
     while not done:
         action = rd.uniform(-1, 1, size=action_dim) * 1e-2
+
         next_state, reward, done, _ = env.step(action)
         episode_return += reward
         step += 1
@@ -411,7 +412,7 @@ def check_stock_trading_env():
     done = False
     episode_return = 0
 
-    # state = env.reset()
+    env.reset()
     while not done:
         action = np.zeros(action_dim)
         action[:3] = 1
@@ -430,16 +431,16 @@ def check_stock_trading_env():
 
     # ============================================================
     '''draw_cumulative_return'''
-    from FinRLPodracer.elegantrl.agent import AgentPPO
-    from FinRLPodracer.elegantrl.run import Arguments
-    args = Arguments(if_on_policy=True)
-    args.agent = AgentPPO()
-    args.env = StockEnvNAS89(if_eval=True)
-    args.if_remove = False
-    args.cwd = './StockTradingEnv-v1_AgentPPO'
-    args.init_before_training()
-
-    env.draw_cumulative_return(args, torch)
+    # from FinRLPodracer.elegantrl.agent import AgentPPO
+    # from FinRLPodracer.elegantrl.run import Arguments
+    # args = Arguments(if_on_policy=True)
+    # args.agent = AgentPPO()
+    # args.env = StockEnvNAS89(if_eval=True)
+    # args.if_remove = False
+    # args.cwd = './StockTradingEnv-v1_AgentPPO'
+    # args.init_before_training()
+    #
+    # env.draw_cumulative_return(args, torch)
 
 
 """Copy from finrl"""
@@ -712,7 +713,7 @@ def load_and_run_agent():
     if policy_name:
         net_dim = 2 ** 9  # todo
 
-        from elegantrl.agent import AgentPPO
+        from FinRLPodracer.elegantrl.agent import AgentPPO
         agent = AgentPPO()
         agent.init(net_dim, state_dim, action_dim)
         agent.save_or_load_policy(cwd, if_save=False)
@@ -763,6 +764,6 @@ def load_and_run_agent():
 
 
 if __name__ == '__main__':
-    # check_stock_trading_env()
-    load_and_run_agent()
+    check_stock_trading_env()
+    # load_and_run_agent()
     # StockEnvNAS74()
