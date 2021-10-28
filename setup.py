@@ -5,12 +5,12 @@ setup(
     version="0.3.1",
     author="Xiaoyang Liu, Steven Li, Hongyang Yang, Jiahao Zheng",
     author_email="XL2427@columbia.edu",
-    url="https://github.com/AI4Finance-LLC/Elegant-FinRL",
+    url="https://github.com/AI4Finance-LLC/Elegant-finrl",
     license="Apache 2.0",
     packages=find_packages(),
     install_requires=[
         'gym', 'matplotlib', 'numpy', 'torch', 'opencv-python', 'yfinance', 'stockstats'],
-    description="FinRL 2.0",
+    description="finrl 2.0",
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
