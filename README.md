@@ -1,6 +1,6 @@
 # FinRL-Podracer
 
-  **News**: We are cleaning the codes, and will release it soon.
+  **News**: We are out of hands, please start it and let us know there is urgent need to update this project. Thanks for your feedback.
 
   This project can be regarded as [**FinRL**](https://github.com/AI4Finance-LLC/FinRL-Library) **2.0**: intermediate-level framework for full-stack developers and professionals. It is built on [ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
