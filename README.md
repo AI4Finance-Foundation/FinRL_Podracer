@@ -1,4 +1,4 @@
-# FinRL-Podracer
+# Podracer
 
   **News**: We are out of hands, please star it and let us know there is urgent need to update this project. Thanks for your feedback.
 
