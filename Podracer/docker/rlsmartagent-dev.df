@@ -1,0 +1,10 @@
+FROM harbor.idea.edu.cn/idea/pytorch-dev:v1.1
+
+
+# copy idea source code
+COPY --chown=develop:develop src /workspace/src
+
+COPY --chown=develop:develop .ssh /home/develop/.ssh
+
+CMD add-pubkey "${SSH_PK}" && bash /home/develop/launch_jupyter
+

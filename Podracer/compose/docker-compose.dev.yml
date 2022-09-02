@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  rlsmartagent-dev:
+    image: idea/rlsmartagent-dev:v1.0
+    build:
+      context: ../
+      dockerfile: docker/rlsmartagent-dev.df
+    restart: unless-stopped
+    container_name: rlsmartagent-dev
+    hostname: rlsmartagent-dev
+    environment:
+      - SSH_PK
+    runtime: nvidia
+    volumes:
+      - /data/jupyter/rlsmartagent:/idea_jupyter
+    networks:
+      - rlsmartagent-dev
+    dns:
+      - 192.168.10.250
+      - 192.168.10.251
+    ports:
+      - "2233:22"
+      - "8804:8804"
+
+networks:
+  rlsmartagent-dev:
+    name: rlsmartagent-dev
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.14.0/24
+          gateway: 10.10.14.1
