@@ -1,6 +1,6 @@
 # Podracer
 
-  **News**: We are out of hands, please star it and let us know there is urgent need to update this project. Thanks for your feedback.
+  **News**: We are out of hands, please star it and let us know it is urgent to update this project. Thanks for your feedback.
 
   This project can be regarded as [**FinRL**](https://github.com/AI4Finance-LLC/FinRL-Library) **2.0**: intermediate-level framework for full-stack developers and professionals. It is built on [ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
@@ -24,7 +24,7 @@
   
 # DRL Algorithms
 
-Currently, model-free deep reinforcement learning (DRL) algorithms: 
+Currently, most model-free deep reinforcement learning (DRL) algorithms are supported: 
 + **DDPG, TD3, SAC, A2C, PPO, PPO(GAE)** for continuous actions
 + **DQN, DoubleDQN, D3QN** for discrete actions
 + **MILP (learn to cut using natural evolutionay strategy)** for portfolio optimization
