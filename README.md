@@ -4,9 +4,9 @@
 
   This project can be regarded as [**FinRL**](https://github.com/AI4Finance-LLC/FinRL-Library) **2.0**: intermediate-level framework for full-stack developers and professionals. It is built on [ElegantRL](https://github.com/AI4Finance-LLC/ElegantRL) and [FinRL](https://github.com/AI4Finance-LLC/FinRL-Library)
   
-  We maintain an **elegant (lightweight, efficient and stable)** FinRL lib, allowing researchers and quant traders to develop algorithmic strategies easily.
+  We maintain an **elegant (lightweight, efficient and stable)** FinRL lib, helping researchers and quant traders to develop algorithmic strategies easily.
   
-  + **Lightweight**: The core codes have less than 800 code lines, using PyTorch and NumPy.
+  + **Lightweight**: The core codes are less than 800 lines and are based on PyTorch and NumPy.
   
   + **Efficient**: Its performance is comparable with [Ray RLlib](https://github.com/ray-project/ray).
   
@@ -59,7 +59,7 @@ For DRL algorithms, please check out the educational webpage [OpenAI Spinning Up
    + Evaluator.
 + **StockTrading_Demo.ipynb** # One stock trading demo using PPO algorithm
 
-# Stock Trading Problem Formulation
+# Formulation of the Stock Trading Problem 
 
 <a href="https://github.com/AI4Finance-LLC/Elegant-FinRL" target="\_blank">
 	<div align="center">
